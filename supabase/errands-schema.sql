@@ -79,13 +79,14 @@ CREATE POLICY "Drivers can accept pending errands"
 
 -- 3. PRICING para mandados
 -- ============================================================
+-- Actualizar CHECK constraint para permitir 'mandadero'
+ALTER TABLE pricing_config DROP CONSTRAINT pricing_config_vehicle_type_check;
+ALTER TABLE pricing_config ADD CONSTRAINT pricing_config_vehicle_type_check
+  CHECK (vehicle_type IN ('moto', 'moto_carguero', 'mandadero'));
+
 INSERT INTO pricing_config (vehicle_type, base_fare, price_per_km, minimum_fare)
 VALUES ('mandadero', 5000, 1500, 8000)
 ON CONFLICT (vehicle_type) DO NOTHING;
-
--- Nota: necesitamos quitar el CHECK constraint de vehicle_type en pricing_config
--- para permitir 'mandadero' como tipo. Alternativa: crear tabla separada.
--- Por ahora usamos la función de pricing en el frontend.
 
 -- 4. HABILITAR REALTIME
 -- ============================================================
