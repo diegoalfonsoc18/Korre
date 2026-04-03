@@ -107,7 +107,7 @@ export default function RegisterScreen() {
             Crear cuenta
           </Text>
           <Text className="text-muted mb-6">
-            Únete a pideYa y empieza a pedir domicilios
+            Únete a Korre y empieza a pedir domicilios
           </Text>
 
           {/* Selector de rol */}

@@ -1,5 +1,5 @@
 -- ============================================================
--- pideYa - Mandadero Digital: Esquema de Base de Datos
+-- Korre - Mandadero Digital: Esquema de Base de Datos
 -- Ejecutar en el SQL Editor de Supabase DESPUÉS de schema.sql
 -- ============================================================
 

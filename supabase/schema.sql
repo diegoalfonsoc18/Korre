@@ -1,5 +1,5 @@
 -- ============================================================
--- pideYa - Esquema de Base de Datos Supabase
+-- Korre - Esquema de Base de Datos Supabase
 -- Ejecutar en el SQL Editor de Supabase en este orden
 -- ============================================================
 
@@ -35,7 +35,7 @@ CREATE OR REPLACE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION handle_new_user();
 
--- RLS para profiles
+-- RLS para profiles (política cross-table se agrega al final, después de crear orders)
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Users can view their own profile"
@@ -45,16 +45,6 @@ CREATE POLICY "Users can view their own profile"
 CREATE POLICY "Users can update their own profile"
   ON profiles FOR UPDATE
   USING (auth.uid() = id);
-
-CREATE POLICY "Drivers can view client profiles of their orders"
-  ON profiles FOR SELECT
-  USING (
-    EXISTS (
-      SELECT 1 FROM orders
-      WHERE (orders.client_id = profiles.id OR orders.driver_id = profiles.id)
-      AND (orders.client_id = auth.uid() OR orders.driver_id = auth.uid())
-    )
-  );
 
 
 -- 2. TABLA: vehicles
@@ -267,3 +257,16 @@ CREATE POLICY "Anyone can view active pricing"
 ALTER PUBLICATION supabase_realtime ADD TABLE orders;
 ALTER PUBLICATION supabase_realtime ADD TABLE driver_status;
 ALTER PUBLICATION supabase_realtime ADD TABLE order_status_history;
+
+
+-- 8. POLÍTICA CROSS-TABLE para profiles (requiere que orders ya exista)
+-- ============================================================
+CREATE POLICY "Drivers can view client profiles of their orders"
+  ON profiles FOR SELECT
+  USING (
+    EXISTS (
+      SELECT 1 FROM orders
+      WHERE (orders.client_id = profiles.id OR orders.driver_id = profiles.id)
+      AND (orders.client_id = auth.uid() OR orders.driver_id = auth.uid())
+    )
+  );

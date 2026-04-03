@@ -108,14 +108,14 @@ export default function LoginScreen() {
                   marginRight: 12,
                 }}
               >
-                <Text style={{ color: '#FFF', fontSize: 20, fontWeight: '900' }}>pY</Text>
+                <Text style={{ color: '#FFF', fontSize: 20, fontWeight: '900' }}>K</Text>
               </View>
               <View>
                 <Text style={{ color: 'rgba(255,255,255,0.7)', fontSize: 10, letterSpacing: 4, textTransform: 'uppercase', fontWeight: '600' }}>
                   Domicilios
                 </Text>
                 <Text style={{ color: '#FFF', fontSize: 18, fontWeight: '800', marginTop: -1 }}>
-                  pideYa
+                  Korre
                 </Text>
               </View>
             </View>

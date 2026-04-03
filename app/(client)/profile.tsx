@@ -88,7 +88,7 @@ export default function ClientProfileScreen() {
         />
 
         <Text className="text-center text-muted text-xs mt-4">
-          pideYa v1.0.0
+          Korre v1.0.0
         </Text>
       </View>
     </View>
