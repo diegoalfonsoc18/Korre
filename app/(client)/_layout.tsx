@@ -5,12 +5,11 @@ export default function ClientLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: '#FF6B35',
+        tabBarActiveTintColor: '#C8FF00',
         tabBarInactiveTintColor: '#8E8E93',
         tabBarStyle: {
-          backgroundColor: '#FFFFFF',
-          borderTopWidth: 1,
-          borderTopColor: '#F1F1F1',
+          backgroundColor: '#1A1A2E',
+          borderTopWidth: 0,
           paddingBottom: 4,
           height: 60,
         },
@@ -24,9 +23,18 @@ export default function ClientLayout() {
       <Tabs.Screen
         name="home"
         options={{
-          title: 'Pedir',
+          title: 'Inicio',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="add-circle-outline" size={size} color={color} />
+            <Ionicons name="home-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="mandadero"
+        options={{
+          title: 'Mandadero',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="walk-outline" size={size} color={color} />
           ),
         }}
       />

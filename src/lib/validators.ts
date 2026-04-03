@@ -56,6 +56,24 @@ export const orderAddressSchema = z.object({
   package_description: z.string().max(200).optional(),
 });
 
+export const errandRequestSchema = z.object({
+  category: z.enum(['compras', 'documentos', 'paquetes', 'otro']),
+  description: z.string().min(10, 'Describe tu mandado con más detalle (mínimo 10 caracteres)'),
+  estimated_item_value: z
+    .string()
+    .optional()
+    .transform((val) => (val ? parseFloat(val.replace(/[^0-9]/g, '')) : undefined)),
+});
+
+export const errandLocationSchema = z.object({
+  pickup_address: z.string().min(10, 'Ingresa una dirección más detallada'),
+  pickup_reference: z.string().max(100).optional(),
+  delivery_address: z.string().min(10, 'Ingresa una dirección más detallada'),
+  delivery_reference: z.string().max(100).optional(),
+});
+
 export type LoginFormData = z.infer<typeof loginSchema>;
 export type RegisterFormData = z.infer<typeof registerSchema>;
 export type OrderAddressFormData = z.infer<typeof orderAddressSchema>;
+export type ErrandRequestFormData = z.infer<typeof errandRequestSchema>;
+export type ErrandLocationFormData = z.infer<typeof errandLocationSchema>;

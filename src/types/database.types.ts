@@ -7,6 +7,17 @@ export type OrderStatus =
   | 'delivered'
   | 'cancelled';
 
+export type ErrandCategory = 'compras' | 'documentos' | 'paquetes' | 'otro';
+export type ErrandStatus =
+  | 'pending'
+  | 'searching'
+  | 'accepted'
+  | 'at_pickup'
+  | 'in_progress'
+  | 'in_transit'
+  | 'delivered'
+  | 'cancelled';
+
 export interface Profile {
   id: string;
   full_name: string;
@@ -76,4 +87,30 @@ export interface PricingConfig {
   price_per_km: number;
   minimum_fare: number;
   is_active: boolean;
+}
+
+export interface Errand {
+  id: string;
+  client_id: string;
+  driver_id: string | null;
+  category: ErrandCategory;
+  description: string;
+  photo_url: string | null;
+  estimated_item_value: number | null;
+  pickup_address: string;
+  pickup_reference: string | null;
+  delivery_address: string;
+  delivery_reference: string | null;
+  estimated_distance_km: number | null;
+  base_price: number;
+  distance_price: number;
+  total_price: number;
+  status: ErrandStatus;
+  created_at: string;
+  accepted_at: string | null;
+  delivered_at: string | null;
+  updated_at: string;
+  evidence_photos: string[] | null;
+  client?: Pick<Profile, 'full_name' | 'phone'>;
+  driver?: Pick<Profile, 'full_name' | 'phone' | 'avatar_url'>;
 }

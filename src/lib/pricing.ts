@@ -49,3 +49,47 @@ export const VEHICLE_DESCRIPTIONS: Record<VehicleType, string> = {
   moto: 'Paquetes pequeños y medianos',
   moto_carguero: 'Paquetes grandes y cargas pesadas',
 };
+
+// Mandadero Digital pricing
+const ERRAND_PRICING = {
+  base_fare: 5000,
+  price_per_km: 1500,
+  minimum_fare: 8000,
+};
+
+export function calculateErrandPrice(distanceKm: number, estimatedItemValue?: number): {
+  basePrice: number;
+  distancePrice: number;
+  totalPrice: number;
+} {
+  const basePrice = ERRAND_PRICING.base_fare;
+  const distancePrice = distanceKm * ERRAND_PRICING.price_per_km;
+  const serviceTotal = Math.max(basePrice + distancePrice, ERRAND_PRICING.minimum_fare);
+  const totalPrice = serviceTotal + (estimatedItemValue ?? 0);
+  return { basePrice, distancePrice, totalPrice };
+}
+
+export const ERRAND_CATEGORY_LABELS: Record<string, string> = {
+  compras: 'Compras',
+  documentos: 'Documentos',
+  paquetes: 'Paquetes',
+  otro: 'Otro',
+};
+
+export const ERRAND_CATEGORY_ICONS: Record<string, string> = {
+  compras: 'cart',
+  documentos: 'document-text',
+  paquetes: 'cube',
+  otro: 'ellipsis-horizontal',
+};
+
+export const ERRAND_STATUS_LABELS: Record<string, string> = {
+  pending: 'Pendiente',
+  searching: 'Buscando mandadero',
+  accepted: 'Aceptado',
+  at_pickup: 'En punto de recogida',
+  in_progress: 'Realizando mandado',
+  in_transit: 'En camino a entrega',
+  delivered: 'Entregado',
+  cancelled: 'Cancelado',
+};
