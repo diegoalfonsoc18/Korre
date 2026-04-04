@@ -13,6 +13,9 @@ export default function Index() {
     );
   }
 
+  // TODO: quitar este bypass cuando auth esté listo
+  return <Redirect href="/(client)/home" />;
+
   if (!session) {
     return <Redirect href="/(auth)/onboarding" />;
   }
