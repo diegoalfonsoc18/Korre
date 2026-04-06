@@ -8,6 +8,15 @@ import { useErrandStore } from '@/stores/errandStore';
 import { errandLocationSchema, ErrandLocationFormData } from '@/lib/validators';
 import { estimateDistancePlaceholder } from '@/lib/pricing';
 
+const COLORS = {
+  primary: '#C8FF00',
+  surface: '#1A1A2E',
+  surfaceVariant: '#2D2D3A',
+  textOnSurface: '#FFFFFF',
+  textOnPrimary: '#1A1A2E',
+  textMuted: '#9E9EB0',
+};
+
 export default function MandaderoLocationsScreen() {
   const { draft, updateDraft } = useErrandStore();
 
@@ -40,42 +49,53 @@ export default function MandaderoLocationsScreen() {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      className="flex-1 bg-white"
+      style={{ flex: 1, backgroundColor: COLORS.surface }}
     >
       <ScrollView
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{ flexGrow: 1 }}
       >
-        <View className="px-5 pt-14 pb-8 flex-1">
+        <View style={{ paddingHorizontal: 20, paddingTop: 56, paddingBottom: 32, flex: 1 }}>
           {/* Header */}
-          <View className="flex-row items-center mb-6">
-            <TouchableOpacity onPress={() => router.back()} className="mr-3">
-              <Ionicons name="arrow-back" size={24} color="#1A1A2E" />
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 24 }}>
+            <TouchableOpacity onPress={() => router.back()} style={{ marginRight: 12 }}>
+              <Ionicons name="arrow-back" size={24} color={COLORS.textOnSurface} />
             </TouchableOpacity>
-            <Text className="text-xl font-bold" style={{ color: '#1A1A2E' }}>
+            <Text style={{ fontSize: 20, fontWeight: '700', color: COLORS.textOnSurface }}>
               Ubicaciones
             </Text>
           </View>
 
           {/* Mapa placeholder */}
           <View
-            className="h-48 rounded-xl mb-6 items-center justify-center"
-            style={{ backgroundColor: '#F0F0F0' }}
+            style={{
+              height: 200,
+              borderRadius: 16,
+              marginBottom: 24,
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: COLORS.surfaceVariant,
+            }}
           >
-            <Ionicons name="map-outline" size={48} color="#BDBDBD" />
-            <Text className="text-sm mt-2" style={{ color: '#BDBDBD' }}>
-              Mapa próximamente
+            <Ionicons name="map-outline" size={48} color={COLORS.textMuted} />
+            <Text style={{ fontSize: 13, color: COLORS.textMuted, marginTop: 8 }}>
+              Mapa proximamente
             </Text>
           </View>
 
           {/* Punto de recogida */}
-          <View className="flex-row items-center mb-3">
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
             <View
-              className="w-3 h-3 rounded-full mr-3"
-              style={{ backgroundColor: '#C8FF00' }}
+              style={{
+                width: 8,
+                height: 8,
+                borderRadius: 4,
+                backgroundColor: COLORS.primary,
+                marginRight: 10,
+              }}
             />
-            <Text className="text-base font-semibold" style={{ color: '#1A1A2E' }}>
+            <Text style={{ fontSize: 15, fontWeight: '700', color: COLORS.textOnSurface }}>
               Punto de Recogida
             </Text>
           </View>
@@ -109,17 +129,22 @@ export default function MandaderoLocationsScreen() {
           />
 
           {/* Línea conectora */}
-          <View className="ml-1.5 my-1">
-            <View style={{ width: 1, height: 20, backgroundColor: '#E0E0E0', marginLeft: 4 }} />
+          <View style={{ marginLeft: 4, marginVertical: 8 }}>
+            <View style={{ width: 1, height: 20, backgroundColor: 'rgba(200,255,0,0.15)' }} />
           </View>
 
           {/* Punto de entrega */}
-          <View className="flex-row items-center mb-3">
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
             <View
-              className="w-3 h-3 rounded-full mr-3"
-              style={{ backgroundColor: '#1A1A2E' }}
+              style={{
+                width: 8,
+                height: 8,
+                borderRadius: 4,
+                backgroundColor: COLORS.surfaceVariant,
+                marginRight: 10,
+              }}
             />
-            <Text className="text-base font-semibold" style={{ color: '#1A1A2E' }}>
+            <Text style={{ fontSize: 15, fontWeight: '700', color: COLORS.textOnSurface }}>
               Punto de Entrega
             </Text>
           </View>
@@ -153,25 +178,35 @@ export default function MandaderoLocationsScreen() {
           />
 
           {/* Spacer */}
-          <View className="flex-1" />
+          <View style={{ flex: 1 }} />
 
           {/* Botones */}
-          <View className="flex-row gap-3 mt-4">
+          <View style={{ flexDirection: 'row', gap: 12, marginTop: 16 }}>
             <TouchableOpacity
               onPress={() => router.back()}
-              className="flex-1 py-4 rounded-xl items-center"
-              style={{ backgroundColor: '#F5F5F5' }}
+              style={{
+                flex: 1,
+                paddingVertical: 16,
+                borderRadius: 14,
+                alignItems: 'center',
+                backgroundColor: COLORS.surfaceVariant,
+              }}
             >
-              <Text className="text-base font-semibold" style={{ color: '#1A1A2E' }}>
-                Atrás
+              <Text style={{ fontSize: 15, fontWeight: '700', color: COLORS.textOnSurface }}>
+                Atras
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={handleSubmit(handleContinue)}
-              className="flex-1 py-4 rounded-xl items-center"
-              style={{ backgroundColor: '#C8FF00' }}
+              style={{
+                flex: 1,
+                paddingVertical: 16,
+                borderRadius: 14,
+                alignItems: 'center',
+                backgroundColor: COLORS.primary,
+              }}
             >
-              <Text className="text-base font-bold" style={{ color: '#1A1A2E' }}>
+              <Text style={{ fontSize: 15, fontWeight: '700', color: COLORS.textOnPrimary }}>
                 Continuar
               </Text>
             </TouchableOpacity>

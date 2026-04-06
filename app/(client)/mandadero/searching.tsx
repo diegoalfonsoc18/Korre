@@ -7,6 +7,15 @@ import { errandService } from '@/services/errandService';
 import { formatCOP } from '@/lib/pricing';
 import { supabase } from '@/lib/supabase';
 
+const COLORS = {
+  primary: '#C8FF00',
+  surface: '#1A1A2E',
+  surfaceVariant: '#2D2D3A',
+  textOnSurface: '#FFFFFF',
+  textOnPrimary: '#1A1A2E',
+  textMuted: '#9E9EB0',
+};
+
 export default function MandaderoSearchingScreen() {
   const { activeErrand, setActiveErrand } = useErrandStore();
   const pulse1 = useRef(new Animated.Value(0.4)).current;
@@ -78,11 +87,11 @@ export default function MandaderoSearchingScreen() {
     if (!activeErrand) return;
     Alert.alert(
       'Cancelar mandado',
-      '¿Estás seguro que quieres cancelar tu mandado?',
+      '¿Estas seguro que quieres cancelar tu mandado?',
       [
         { text: 'No', style: 'cancel' },
         {
-          text: 'Sí, cancelar',
+          text: 'Si, cancelar',
           style: 'destructive',
           onPress: async () => {
             try {
@@ -102,54 +111,81 @@ export default function MandaderoSearchingScreen() {
   const total = activeErrand?.total_price ?? 0;
 
   return (
-    <View className="flex-1 bg-white items-center justify-center px-5">
+    <View style={{ flex: 1, backgroundColor: COLORS.surface, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 20 }}>
       {/* Pulse animation */}
-      <View className="w-48 h-48 items-center justify-center mb-8">
+      <View style={{ width: 200, height: 200, alignItems: 'center', justifyContent: 'center', marginBottom: 32 }}>
         <Animated.View
-          className="absolute w-48 h-48 rounded-full"
-          style={{ backgroundColor: '#C8FF00', opacity: pulse3, transform: [{ scale: pulse3 }] }}
+          style={{
+            position: 'absolute',
+            width: 200,
+            height: 200,
+            borderRadius: 100,
+            backgroundColor: COLORS.primary,
+            opacity: pulse3,
+            transform: [{ scale: pulse3 }],
+          }}
         />
         <Animated.View
-          className="absolute w-36 h-36 rounded-full"
-          style={{ backgroundColor: '#C8FF00', opacity: pulse2, transform: [{ scale: pulse2 }] }}
+          style={{
+            position: 'absolute',
+            width: 150,
+            height: 150,
+            borderRadius: 75,
+            backgroundColor: COLORS.primary,
+            opacity: pulse2,
+            transform: [{ scale: pulse2 }],
+          }}
         />
         <Animated.View
-          className="absolute w-24 h-24 rounded-full"
-          style={{ backgroundColor: '#C8FF00', opacity: pulse1, transform: [{ scale: pulse1 }] }}
+          style={{
+            position: 'absolute',
+            width: 100,
+            height: 100,
+            borderRadius: 50,
+            backgroundColor: COLORS.primary,
+            opacity: pulse1,
+            transform: [{ scale: pulse1 }],
+          }}
         />
         <View
-          className="w-20 h-20 rounded-full items-center justify-center"
-          style={{ backgroundColor: '#C8FF00' }}
+          style={{
+            width: 80,
+            height: 80,
+            borderRadius: 40,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: COLORS.primary,
+          }}
         >
-          <Ionicons name="bicycle-outline" size={36} color="#1A1A2E" />
+          <Ionicons name="bicycle-outline" size={40} color={COLORS.textOnPrimary} />
         </View>
       </View>
 
       {/* Text */}
-      <Text className="text-2xl font-bold mb-2" style={{ color: '#1A1A2E' }}>
+      <Text style={{ fontSize: 24, fontWeight: '800', marginBottom: 8, color: COLORS.textOnSurface }}>
         Buscando mandadero...
       </Text>
-      <Text className="text-sm text-center mb-8" style={{ color: '#8E8E93' }}>
+      <Text style={{ fontSize: 14, textAlign: 'center', marginBottom: 32, color: COLORS.textMuted }}>
         Encontrando el mejor mandadero cerca de ti
       </Text>
 
       {/* Info cards */}
-      <View className="flex-row gap-4 mb-12">
-        <View className="flex-1 items-center py-3 rounded-xl" style={{ backgroundColor: '#F5F5F5' }}>
-          <Ionicons name="navigate-outline" size={18} color="#8E8E93" />
-          <Text className="text-sm font-semibold mt-1" style={{ color: '#1A1A2E' }}>
+      <View style={{ flexDirection: 'row', gap: 12, marginBottom: 32, width: '100%' }}>
+        <View style={{ flex: 1, alignItems: 'center', paddingVertical: 14, borderRadius: 14, backgroundColor: COLORS.surfaceVariant }}>
+          <Ionicons name="navigate-outline" size={20} color={COLORS.primary} />
+          <Text style={{ fontSize: 13, fontWeight: '700', marginTop: 4, color: COLORS.textOnSurface }}>
             {km.toFixed(1)} km
           </Text>
         </View>
-        <View className="flex-1 items-center py-3 rounded-xl" style={{ backgroundColor: '#F5F5F5' }}>
-          <Ionicons name="time-outline" size={18} color="#8E8E93" />
-          <Text className="text-sm font-semibold mt-1" style={{ color: '#1A1A2E' }}>
+        <View style={{ flex: 1, alignItems: 'center', paddingVertical: 14, borderRadius: 14, backgroundColor: COLORS.surfaceVariant }}>
+          <Ionicons name="time-outline" size={20} color={COLORS.primary} />
+          <Text style={{ fontSize: 13, fontWeight: '700', marginTop: 4, color: COLORS.textOnSurface }}>
             ~{Math.round(km * 5 + 10)} min
           </Text>
         </View>
-        <View className="flex-1 items-center py-3 rounded-xl" style={{ backgroundColor: '#F5F5F5' }}>
-          <Ionicons name="wallet-outline" size={18} color="#8E8E93" />
-          <Text className="text-sm font-semibold mt-1" style={{ color: '#1A1A2E' }}>
+        <View style={{ flex: 1, alignItems: 'center', paddingVertical: 14, borderRadius: 14, backgroundColor: COLORS.surfaceVariant }}>
+          <Ionicons name="wallet-outline" size={20} color={COLORS.primary} />
+          <Text style={{ fontSize: 13, fontWeight: '700', marginTop: 4, color: COLORS.textOnSurface }}>
             {formatCOP(total)}
           </Text>
         </View>
@@ -157,7 +193,7 @@ export default function MandaderoSearchingScreen() {
 
       {/* Cancel */}
       <TouchableOpacity onPress={handleCancel}>
-        <Text className="text-sm font-medium" style={{ color: '#E74C3C' }}>
+        <Text style={{ fontSize: 14, fontWeight: '600', color: '#FF5A5A' }}>
           Cancelar solicitud
         </Text>
       </TouchableOpacity>

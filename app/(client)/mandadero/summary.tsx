@@ -12,6 +12,15 @@ import {
   ERRAND_CATEGORY_ICONS,
 } from '@/lib/pricing';
 
+const COLORS = {
+  primary: '#C8FF00',
+  surface: '#1A1A2E',
+  surfaceVariant: '#2D2D3A',
+  textOnSurface: '#FFFFFF',
+  textOnPrimary: '#1A1A2E',
+  textMuted: '#9E9EB0',
+};
+
 export default function MandaderoSummaryScreen() {
   const { profile } = useAuthStore();
   const { draft, updateDraft, setActiveErrand, resetDraft } = useErrandStore();
@@ -61,127 +70,213 @@ export default function MandaderoSummaryScreen() {
   };
 
   return (
-    <ScrollView className="flex-1 bg-white" showsVerticalScrollIndicator={false}>
-      <View className="px-5 pt-14 pb-8">
+    <ScrollView style={{ flex: 1, backgroundColor: COLORS.surface }} showsVerticalScrollIndicator={false}>
+      <View style={{ paddingHorizontal: 20, paddingTop: 56, paddingBottom: 32 }}>
         {/* Header */}
-        <View className="flex-row items-center mb-6">
-          <TouchableOpacity onPress={() => router.back()} className="mr-3">
-            <Ionicons name="arrow-back" size={24} color="#1A1A2E" />
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 24 }}>
+          <TouchableOpacity onPress={() => router.back()} style={{ marginRight: 12 }}>
+            <Ionicons name="arrow-back" size={24} color={COLORS.textOnSurface} />
           </TouchableOpacity>
-          <Text className="text-xl font-bold" style={{ color: '#1A1A2E' }}>
+          <Text style={{ fontSize: 20, fontWeight: '700', color: COLORS.textOnSurface }}>
             Resumen del Mandado
           </Text>
         </View>
 
         {/* Resumen del mandado */}
-        <View className="rounded-xl p-4 mb-4" style={{ backgroundColor: '#1A1A2E' }}>
-          <View className="flex-row items-center mb-3">
+        <View
+          style={{
+            borderRadius: 16,
+            padding: 16,
+            marginBottom: 16,
+            backgroundColor: COLORS.surfaceVariant,
+          }}
+        >
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
             <View
-              className="w-8 h-8 rounded-lg items-center justify-center mr-3"
-              style={{ backgroundColor: '#C8FF00' }}
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: 12,
+                backgroundColor: COLORS.primary,
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginRight: 10,
+              }}
             >
-              <Ionicons name={categoryIcon} size={18} color="#1A1A2E" />
+              <Ionicons name={categoryIcon} size={18} color={COLORS.textOnPrimary} />
             </View>
-            <Text className="text-base font-semibold text-white">
+            <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.textOnSurface }}>
               {ERRAND_CATEGORY_LABELS[draft.category ?? 'otro']}
             </Text>
           </View>
-          <Text className="text-sm text-gray-300 leading-5">
+          <Text style={{ fontSize: 14, color: COLORS.textMuted, lineHeight: 20 }}>
             {draft.description}
           </Text>
         </View>
 
         {/* Ruta */}
-        <View className="rounded-xl p-4 mb-4" style={{ backgroundColor: '#F5F5F5' }}>
-          <View className="flex-row items-start mb-3">
-            <View className="w-3 h-3 rounded-full mt-1 mr-3" style={{ backgroundColor: '#C8FF00' }} />
-            <View className="flex-1">
-              <Text className="text-xs" style={{ color: '#8E8E93' }}>Recogida</Text>
-              <Text className="text-sm font-medium" style={{ color: '#1A1A2E' }}>
+        <View
+          style={{
+            borderRadius: 16,
+            padding: 16,
+            marginBottom: 16,
+            backgroundColor: COLORS.surfaceVariant,
+          }}
+        >
+          <View style={{ flexDirection: 'row', alignItems: 'flex-start', marginBottom: 12 }}>
+            <View
+              style={{
+                width: 8,
+                height: 8,
+                borderRadius: 4,
+                backgroundColor: COLORS.primary,
+                marginRight: 10,
+                marginTop: 5,
+              }}
+            />
+            <View style={{ flex: 1 }}>
+              <Text style={{ fontSize: 12, color: COLORS.textMuted, marginBottom: 2 }}>Recogida</Text>
+              <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.textOnSurface }}>
                 {draft.pickupAddress}
               </Text>
             </View>
           </View>
-          <View className="ml-1.5 mb-3">
-            <View style={{ width: 1, height: 16, backgroundColor: '#E0E0E0', marginLeft: 4 }} />
+          <View style={{ marginLeft: 4, marginBottom: 12 }}>
+            <View style={{ width: 1, height: 16, backgroundColor: 'rgba(200,255,0,0.15)' }} />
           </View>
-          <View className="flex-row items-start">
-            <View className="w-3 h-3 rounded-full mt-1 mr-3" style={{ backgroundColor: '#1A1A2E' }} />
-            <View className="flex-1">
-              <Text className="text-xs" style={{ color: '#8E8E93' }}>Entrega</Text>
-              <Text className="text-sm font-medium" style={{ color: '#1A1A2E' }}>
+          <View style={{ flexDirection: 'row', alignItems: 'flex-start', marginBottom: 12 }}>
+            <View
+              style={{
+                width: 8,
+                height: 8,
+                borderRadius: 4,
+                backgroundColor: COLORS.surfaceVariant,
+                marginRight: 10,
+                marginTop: 5,
+                borderWidth: 2,
+                borderColor: COLORS.primary,
+              }}
+            />
+            <View style={{ flex: 1 }}>
+              <Text style={{ fontSize: 12, color: COLORS.textMuted, marginBottom: 2 }}>Entrega</Text>
+              <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.textOnSurface }}>
                 {draft.deliveryAddress}
               </Text>
             </View>
           </View>
-          <View className="flex-row items-center justify-center mt-3 pt-3" style={{ borderTopWidth: 1, borderTopColor: '#E0E0E0' }}>
-            <Ionicons name="navigate-outline" size={14} color="#8E8E93" />
-            <Text className="text-sm ml-1" style={{ color: '#8E8E93' }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginTop: 12,
+              paddingTop: 12,
+              borderTopWidth: 1,
+              borderTopColor: 'rgba(200,255,0,0.15)',
+            }}
+          >
+            <Ionicons name="navigate-outline" size={14} color={COLORS.textMuted} />
+            <Text style={{ fontSize: 13, marginLeft: 6, color: COLORS.textMuted }}>
               {km.toFixed(1)} km
             </Text>
           </View>
         </View>
 
         {/* Desglose de precio */}
-        <View className="rounded-xl p-4 mb-4" style={{ backgroundColor: '#F5F5F5' }}>
-          <Text className="text-base font-semibold mb-3" style={{ color: '#1A1A2E' }}>
+        <View
+          style={{
+            borderRadius: 16,
+            padding: 16,
+            marginBottom: 16,
+            backgroundColor: COLORS.surfaceVariant,
+          }}
+        >
+          <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.textOnSurface, marginBottom: 14 }}>
             Precio estimado
           </Text>
 
-          <View className="flex-row justify-between mb-2">
-            <Text className="text-sm" style={{ color: '#8E8E93' }}>Tarifa base</Text>
-            <Text className="text-sm font-medium" style={{ color: '#1A1A2E' }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 }}>
+            <Text style={{ fontSize: 13, color: COLORS.textMuted }}>Tarifa base</Text>
+            <Text style={{ fontSize: 13, fontWeight: '600', color: COLORS.textOnSurface }}>
               {formatCOP(pricing.basePrice)}
             </Text>
           </View>
 
-          <View className="flex-row justify-between mb-2">
-            <Text className="text-sm" style={{ color: '#8E8E93' }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 }}>
+            <Text style={{ fontSize: 13, color: COLORS.textMuted }}>
               Distancia ({km.toFixed(1)} km)
             </Text>
-            <Text className="text-sm font-medium" style={{ color: '#1A1A2E' }}>
+            <Text style={{ fontSize: 13, fontWeight: '600', color: COLORS.textOnSurface }}>
               {formatCOP(pricing.distancePrice)}
             </Text>
           </View>
 
           {draft.estimatedItemValue ? (
-            <View className="flex-row justify-between mb-2">
-              <Text className="text-sm" style={{ color: '#8E8E93' }}>Valor artículos</Text>
-              <Text className="text-sm font-medium" style={{ color: '#1A1A2E' }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 }}>
+              <Text style={{ fontSize: 13, color: COLORS.textMuted }}>Valor articulos</Text>
+              <Text style={{ fontSize: 13, fontWeight: '600', color: COLORS.textOnSurface }}>
                 ~{formatCOP(draft.estimatedItemValue)}
               </Text>
             </View>
           ) : null}
 
-          <View className="mt-2 pt-3" style={{ borderTopWidth: 1, borderTopColor: '#E0E0E0' }}>
-            <View className="flex-row justify-between">
-              <Text className="text-base font-bold" style={{ color: '#1A1A2E' }}>
-                Total estimado
-              </Text>
-              <Text className="text-base font-bold" style={{ color: '#1A1A2E' }}>
-                {formatCOP(pricing.totalPrice)}
-              </Text>
-            </View>
+          <View
+            style={{
+              marginTop: 10,
+              paddingTop: 12,
+              borderTopWidth: 1,
+              borderTopColor: 'rgba(200,255,0,0.15)',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <Text style={{ fontSize: 15, fontWeight: '700', color: COLORS.textOnSurface }}>
+              Total estimado
+            </Text>
+            <Text style={{ fontSize: 18, fontWeight: '800', color: COLORS.primary }}>
+              {formatCOP(pricing.totalPrice)}
+            </Text>
           </View>
 
-          <Text className="text-xs mt-2" style={{ color: '#BDBDBD' }}>
-            El valor final puede variar según los artículos comprados
+          <Text style={{ fontSize: 12, color: COLORS.textMuted, marginTop: 8 }}>
+            El valor final puede variar segun los articulos comprados
           </Text>
         </View>
 
         {/* Método de pago */}
-        <View className="rounded-xl p-4 mb-6 flex-row items-center justify-between" style={{ backgroundColor: '#F5F5F5' }}>
-          <View className="flex-row items-center">
-            <View className="w-8 h-8 rounded-lg items-center justify-center mr-3" style={{ backgroundColor: '#1A1A2E' }}>
-              <Ionicons name="wallet-outline" size={16} color="#C8FF00" />
+        <View
+          style={{
+            borderRadius: 16,
+            padding: 16,
+            marginBottom: 24,
+            backgroundColor: COLORS.surfaceVariant,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: 12,
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: COLORS.surface,
+                marginRight: 10,
+              }}
+            >
+              <Ionicons name="wallet-outline" size={18} color={COLORS.primary} />
             </View>
             <View>
-              <Text className="text-sm font-medium" style={{ color: '#1A1A2E' }}>Efectivo</Text>
-              <Text className="text-xs" style={{ color: '#8E8E93' }}>Pago al mandadero</Text>
+              <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.textOnSurface }}>Efectivo</Text>
+              <Text style={{ fontSize: 12, color: COLORS.textMuted, marginTop: 2 }}>Pago al mandadero</Text>
             </View>
           </View>
           <TouchableOpacity>
-            <Text className="text-sm font-medium" style={{ color: '#C8FF00' }}>Cambiar</Text>
+            <Text style={{ fontSize: 13, fontWeight: '600', color: COLORS.primary }}>Cambiar</Text>
           </TouchableOpacity>
         </View>
 
@@ -189,10 +284,14 @@ export default function MandaderoSummaryScreen() {
         <TouchableOpacity
           onPress={handleConfirm}
           disabled={isCreating}
-          className="py-4 rounded-xl items-center"
-          style={{ backgroundColor: isCreating ? '#E0E0E0' : '#C8FF00' }}
+          style={{
+            paddingVertical: 16,
+            borderRadius: 14,
+            alignItems: 'center',
+            backgroundColor: isCreating ? 'rgba(200,255,0,0.2)' : COLORS.primary,
+          }}
         >
-          <Text className="text-base font-bold" style={{ color: '#1A1A2E' }}>
+          <Text style={{ fontSize: 16, fontWeight: '700', color: isCreating ? COLORS.textMuted : COLORS.textOnPrimary }}>
             {isCreating ? 'Creando mandado...' : `Confirmar Mandado - ${formatCOP(pricing.totalPrice)}`}
           </Text>
         </TouchableOpacity>

@@ -1,17 +1,23 @@
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from '@/context/ThemeContext';
 
 export default function ClientLayout() {
+  const { colors, theme } = useTheme();
+
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: '#C8FF00',
-        tabBarInactiveTintColor: '#8E8E93',
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: theme === 'dark' ? '#6E6E80' : '#BDBDBD',
         tabBarStyle: {
-          backgroundColor: '#1A1A2E',
-          borderTopWidth: 0,
+          backgroundColor: colors.surface,
+          borderTopWidth: 1,
+          borderTopColor: colors.surfaceVariant,
           paddingBottom: 4,
           height: 60,
+          elevation: 0,
+          shadowOpacity: 0,
         },
         tabBarLabelStyle: {
           fontSize: 11,

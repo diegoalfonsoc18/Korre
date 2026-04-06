@@ -3,6 +3,7 @@ import { Stack } from 'expo-router';
 import { supabase } from '@/lib/supabase';
 import { useAuthStore } from '@/stores/authStore';
 import { authService } from '@/services/authService';
+import { ThemeProvider } from '@/context/ThemeContext';
 import '../global.css';
 
 export default function RootLayout() {
@@ -30,12 +31,14 @@ export default function RootLayout() {
   }, [setSession, setProfile, setLoading]);
 
   return (
-    <Stack>
-      <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-      <Stack.Screen name="(client)" options={{ headerShown: false }} />
-      <Stack.Screen name="(driver)" options={{ headerShown: false }} />
-      <Stack.Screen name="+not-found" options={{ headerShown: false }} />
-    </Stack>
+    <ThemeProvider>
+      <Stack>
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+        <Stack.Screen name="(client)" options={{ headerShown: false }} />
+        <Stack.Screen name="(driver)" options={{ headerShown: false }} />
+        <Stack.Screen name="+not-found" options={{ headerShown: false }} />
+      </Stack>
+    </ThemeProvider>
   );
 }

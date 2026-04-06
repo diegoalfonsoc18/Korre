@@ -7,6 +7,17 @@ import { formatCOP, ERRAND_STATUS_LABELS, ERRAND_CATEGORY_LABELS } from '@/lib/p
 import { supabase } from '@/lib/supabase';
 import { Errand } from '@/types/database.types';
 
+const COLORS = {
+  primary: '#C8FF00',
+  surface: '#1A1A2E',
+  surfaceVariant: '#2D2D3A',
+  textOnSurface: '#FFFFFF',
+  textOnPrimary: '#1A1A2E',
+  textMuted: '#9E9EB0',
+  success: '#4ADE80',
+  danger: '#FF5A5A',
+};
+
 const STATUS_STEPS = [
   { key: 'accepted', label: 'Mandado aceptado' },
   { key: 'at_pickup', label: 'En punto de recogida' },
@@ -57,17 +68,33 @@ export default function MandaderoTrackingScreen() {
 
   if (!activeErrand) {
     return (
-      <View className="flex-1 bg-white items-center justify-center px-5">
-        <Ionicons name="checkmark-circle" size={64} color="#C8FF00" />
-        <Text className="text-xl font-bold mt-4" style={{ color: '#1A1A2E' }}>
+      <View style={{ flex: 1, backgroundColor: COLORS.surface, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 20 }}>
+        <View
+          style={{
+            width: 80,
+            height: 80,
+            borderRadius: 24,
+            backgroundColor: COLORS.surfaceVariant,
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: 16,
+          }}
+        >
+          <Ionicons name="checkmark-circle" size={40} color={COLORS.primary} />
+        </View>
+        <Text style={{ fontSize: 18, fontWeight: '700', marginBottom: 24, color: COLORS.textOnSurface }}>
           No hay mandado activo
         </Text>
         <TouchableOpacity
           onPress={() => router.replace('/(client)/home')}
-          className="mt-6 py-3 px-8 rounded-xl"
-          style={{ backgroundColor: '#C8FF00' }}
+          style={{
+            paddingVertical: 14,
+            paddingHorizontal: 28,
+            borderRadius: 14,
+            backgroundColor: COLORS.primary,
+          }}
         >
-          <Text className="text-base font-bold" style={{ color: '#1A1A2E' }}>
+          <Text style={{ fontSize: 15, fontWeight: '700', color: COLORS.textOnPrimary }}>
             Volver al inicio
           </Text>
         </TouchableOpacity>
@@ -85,62 +112,87 @@ export default function MandaderoTrackingScreen() {
   const isCancelled = activeErrand.status === 'cancelled';
 
   return (
-    <ScrollView className="flex-1 bg-white" showsVerticalScrollIndicator={false}>
-      <View className="px-5 pt-14 pb-8">
+    <ScrollView style={{ flex: 1, backgroundColor: COLORS.surface }} showsVerticalScrollIndicator={false}>
+      <View style={{ paddingHorizontal: 20, paddingTop: 56, paddingBottom: 32 }}>
         {/* Header */}
-        <View className="flex-row items-center mb-6">
-          <TouchableOpacity onPress={() => router.replace('/(client)/home')} className="mr-3">
-            <Ionicons name="arrow-back" size={24} color="#1A1A2E" />
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 24 }}>
+          <TouchableOpacity onPress={() => router.replace('/(client)/home')} style={{ marginRight: 12 }}>
+            <Ionicons name="arrow-back" size={24} color={COLORS.textOnSurface} />
           </TouchableOpacity>
-          <Text className="text-xl font-bold" style={{ color: '#1A1A2E' }}>
+          <Text style={{ fontSize: 20, fontWeight: '700', color: COLORS.textOnSurface }}>
             Tu Mandado
           </Text>
         </View>
 
         {/* Map placeholder */}
         <View
-          className="h-48 rounded-xl mb-4 items-center justify-center"
-          style={{ backgroundColor: '#F0F0F0' }}
+          style={{
+            height: 200,
+            borderRadius: 16,
+            marginBottom: 16,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: COLORS.surfaceVariant,
+          }}
         >
-          <Ionicons name="map-outline" size={48} color="#BDBDBD" />
-          <Text className="text-sm mt-2" style={{ color: '#BDBDBD' }}>
-            Mapa en tiempo real próximamente
+          <Ionicons name="map-outline" size={48} color={COLORS.textMuted} />
+          <Text style={{ fontSize: 13, color: COLORS.textMuted, marginTop: 8 }}>
+            Mapa en tiempo real proximamente
           </Text>
         </View>
 
         {/* Driver card */}
         {activeErrand.driver && (
-          <View className="rounded-xl p-4 mb-4" style={{ backgroundColor: '#1A1A2E' }}>
-            <View className="flex-row items-center">
+          <View style={{ borderRadius: 16, padding: 16, marginBottom: 16, backgroundColor: COLORS.surfaceVariant }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <View
-                className="w-12 h-12 rounded-full items-center justify-center mr-3"
-                style={{ backgroundColor: '#2D2D3A' }}
+                style={{
+                  width: 48,
+                  height: 48,
+                  borderRadius: 14,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginRight: 12,
+                  backgroundColor: COLORS.surface,
+                }}
               >
-                <Ionicons name="person" size={24} color="#C8FF00" />
+                <Ionicons name="person" size={24} color={COLORS.primary} />
               </View>
-              <View className="flex-1">
-                <Text className="text-white font-semibold text-base">
+              <View style={{ flex: 1 }}>
+                <Text style={{ color: COLORS.textOnSurface, fontSize: 16, fontWeight: '700' }}>
                   {activeErrand.driver.full_name}
                 </Text>
-                <View className="flex-row items-center mt-1">
-                  <Ionicons name="star" size={12} color="#C8FF00" />
-                  <Text className="text-gray-400 text-xs ml-1">4.9</Text>
-                  <Ionicons name="bicycle-outline" size={12} color="#8E8E93" style={{ marginLeft: 8 }} />
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4 }}>
+                  <Ionicons name="star" size={12} color={COLORS.primary} />
+                  <Text style={{ color: COLORS.textMuted, fontSize: 12, marginLeft: 4 }}>4.9</Text>
+                  <Ionicons name="bicycle-outline" size={12} color={COLORS.textMuted} style={{ marginLeft: 8 }} />
                 </View>
               </View>
-              <View className="flex-row gap-2">
+              <View style={{ flexDirection: 'row', gap: 8 }}>
                 <TouchableOpacity
                   onPress={handleCall}
-                  className="py-2 px-4 rounded-lg"
-                  style={{ backgroundColor: '#C8FF00' }}
+                  style={{
+                    paddingVertical: 8,
+                    paddingHorizontal: 14,
+                    borderRadius: 10,
+                    backgroundColor: COLORS.primary,
+                  }}
                 >
-                  <Text className="text-xs font-bold" style={{ color: '#1A1A2E' }}>Llamar</Text>
+                  <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.textOnPrimary }}>
+                    Llamar
+                  </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  className="py-2 px-4 rounded-lg"
-                  style={{ backgroundColor: '#2D2D3A' }}
+                  style={{
+                    paddingVertical: 8,
+                    paddingHorizontal: 14,
+                    borderRadius: 10,
+                    backgroundColor: COLORS.surface,
+                  }}
                 >
-                  <Text className="text-xs font-bold text-white">Chat</Text>
+                  <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.textOnSurface }}>
+                    Chat
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -149,30 +201,34 @@ export default function MandaderoTrackingScreen() {
 
         {/* Status timeline */}
         {!isCancelled && (
-          <View className="rounded-xl p-4 mb-4" style={{ backgroundColor: '#F5F5F5' }}>
-            <Text className="text-base font-semibold mb-4" style={{ color: '#1A1A2E' }}>
+          <View style={{ borderRadius: 16, padding: 16, marginBottom: 16, backgroundColor: COLORS.surfaceVariant }}>
+            <Text style={{ fontSize: 16, fontWeight: '700', marginBottom: 16, color: COLORS.textOnSurface }}>
               Estado del mandado
             </Text>
             {STATUS_STEPS.map((step, index) => {
               const state = getStepState(step.key, activeErrand.status);
               return (
-                <View key={step.key} className="flex-row items-start mb-4">
-                  <View className="items-center mr-3">
+                <View key={step.key} style={{ flexDirection: 'row', alignItems: 'flex-start', marginBottom: 16 }}>
+                  <View style={{ alignItems: 'center', marginRight: 12 }}>
                     <View
-                      className="w-6 h-6 rounded-full items-center justify-center"
                       style={{
+                        width: 28,
+                        height: 28,
+                        borderRadius: 14,
+                        alignItems: 'center',
+                        justifyContent: 'center',
                         backgroundColor:
-                          state === 'done' ? '#C8FF00'
-                          : state === 'active' ? '#C8FF00'
-                          : '#E0E0E0',
+                          state === 'done' ? COLORS.success
+                          : state === 'active' ? COLORS.primary
+                          : COLORS.surface,
                       }}
                     >
                       {state === 'done' ? (
-                        <Ionicons name="checkmark" size={14} color="#1A1A2E" />
+                        <Ionicons name="checkmark" size={16} color={COLORS.textOnPrimary} />
                       ) : state === 'active' ? (
-                        <View className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#1A1A2E' }} />
+                        <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: COLORS.textOnPrimary }} />
                       ) : (
-                        <View className="w-2 h-2 rounded-full" style={{ backgroundColor: '#BDBDBD' }} />
+                        <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: COLORS.textMuted }} />
                       )}
                     </View>
                     {index < STATUS_STEPS.length - 1 && (
@@ -180,22 +236,23 @@ export default function MandaderoTrackingScreen() {
                         style={{
                           width: 2,
                           height: 24,
-                          backgroundColor: state === 'done' ? '#C8FF00' : '#E0E0E0',
+                          backgroundColor: state === 'done' || state === 'active' ? COLORS.primary : COLORS.surface,
                         }}
                       />
                     )}
                   </View>
-                  <View className="flex-1 pt-0.5">
+                  <View style={{ flex: 1, paddingTop: 2 }}>
                     <Text
-                      className="text-sm font-medium"
                       style={{
-                        color: state === 'pending' ? '#BDBDBD' : '#1A1A2E',
+                        fontSize: 14,
+                        fontWeight: '600',
+                        color: state === 'pending' ? COLORS.textMuted : COLORS.textOnSurface,
                       }}
                     >
                       {step.label}
                     </Text>
                     {state === 'active' && (
-                      <Text className="text-xs mt-0.5" style={{ color: '#8E8E93' }}>
+                      <Text style={{ fontSize: 12, marginTop: 2, color: COLORS.textMuted }}>
                         {ERRAND_STATUS_LABELS[activeErrand.status]}...
                       </Text>
                     )}
@@ -208,9 +265,9 @@ export default function MandaderoTrackingScreen() {
 
         {/* Cancelled state */}
         {isCancelled && (
-          <View className="rounded-xl p-4 mb-4 items-center" style={{ backgroundColor: '#FFF0F0' }}>
-            <Ionicons name="close-circle" size={48} color="#E74C3C" />
-            <Text className="text-base font-bold mt-2" style={{ color: '#E74C3C' }}>
+          <View style={{ borderRadius: 16, padding: 16, marginBottom: 16, alignItems: 'center', backgroundColor: 'rgba(255,90,90,0.1)', borderWidth: 1, borderColor: 'rgba(255,90,90,0.2)' }}>
+            <Ionicons name="close-circle" size={48} color={COLORS.danger} />
+            <Text style={{ fontSize: 16, fontWeight: '700', marginTop: 8, color: COLORS.danger }}>
               Mandado cancelado
             </Text>
           </View>
@@ -218,18 +275,24 @@ export default function MandaderoTrackingScreen() {
 
         {/* Evidence photos */}
         {activeErrand.evidence_photos && activeErrand.evidence_photos.length > 0 && (
-          <View className="rounded-xl p-4 mb-4" style={{ backgroundColor: '#F5F5F5' }}>
-            <Text className="text-base font-semibold mb-3" style={{ color: '#1A1A2E' }}>
+          <View style={{ borderRadius: 16, padding: 16, marginBottom: 16, backgroundColor: COLORS.surfaceVariant }}>
+            <Text style={{ fontSize: 16, fontWeight: '700', marginBottom: 12, color: COLORS.textOnSurface }}>
               Evidencia
             </Text>
-            <View className="flex-row gap-2">
+            <View style={{ flexDirection: 'row', gap: 8 }}>
               {activeErrand.evidence_photos.map((_, idx) => (
                 <View
                   key={idx}
-                  className="w-16 h-16 rounded-lg items-center justify-center"
-                  style={{ backgroundColor: '#E0E0E0' }}
+                  style={{
+                    width: 64,
+                    height: 64,
+                    borderRadius: 12,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: COLORS.surface,
+                  }}
                 >
-                  <Ionicons name="image-outline" size={24} color="#8E8E93" />
+                  <Ionicons name="image-outline" size={28} color={COLORS.textMuted} />
                 </View>
               ))}
             </View>
@@ -237,16 +300,16 @@ export default function MandaderoTrackingScreen() {
         )}
 
         {/* Mandado summary */}
-        <View className="rounded-xl p-4 mb-4" style={{ backgroundColor: '#F5F5F5' }}>
-          <View className="flex-row justify-between items-center">
-            <View className="flex-row items-center">
-              <Ionicons name="receipt-outline" size={16} color="#8E8E93" />
-              <Text className="text-sm ml-2" style={{ color: '#8E8E93' }}>
+        <View style={{ borderRadius: 16, padding: 16, marginBottom: 16, backgroundColor: COLORS.surfaceVariant }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Ionicons name="receipt-outline" size={16} color={COLORS.textMuted} />
+              <Text style={{ fontSize: 13, marginLeft: 8, color: COLORS.textMuted }}>
                 {ERRAND_CATEGORY_LABELS[activeErrand.category]} — {formatCOP(activeErrand.total_price)}
               </Text>
             </View>
           </View>
-          <Text className="text-xs mt-2" style={{ color: '#BDBDBD' }}>
+          <Text style={{ fontSize: 12, marginTop: 8, color: COLORS.textMuted }}>
             {activeErrand.pickup_address} → {activeErrand.delivery_address}
           </Text>
         </View>
@@ -258,10 +321,14 @@ export default function MandaderoTrackingScreen() {
               setActiveErrand(null);
               router.replace('/(client)/home');
             }}
-            className="py-4 rounded-xl items-center"
-            style={{ backgroundColor: '#C8FF00' }}
+            style={{
+              paddingVertical: 16,
+              borderRadius: 14,
+              alignItems: 'center',
+              backgroundColor: COLORS.primary,
+            }}
           >
-            <Text className="text-base font-bold" style={{ color: '#1A1A2E' }}>
+            <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.textOnPrimary }}>
               Volver al inicio
             </Text>
           </TouchableOpacity>
