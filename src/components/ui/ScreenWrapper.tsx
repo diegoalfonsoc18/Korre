@@ -1,4 +1,5 @@
-import { View, ScrollView, SafeAreaView } from 'react-native';
+import { View, ScrollView } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface ScreenWrapperProps {
   children: React.ReactNode;
@@ -9,7 +10,7 @@ interface ScreenWrapperProps {
 export function ScreenWrapper({
   children,
   scrollable = false,
-  className = '',
+  className = "",
 }: ScreenWrapperProps) {
   if (scrollable) {
     return (
@@ -18,8 +19,7 @@ export function ScreenWrapper({
           className={`flex-1 ${className}`}
           contentContainerStyle={{ flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled"
-        >
+          keyboardShouldPersistTaps="handled">
           {children}
         </ScrollView>
       </SafeAreaView>
