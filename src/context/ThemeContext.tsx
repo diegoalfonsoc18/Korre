@@ -1,4 +1,5 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
+import { useColorScheme } from 'react-native';
 import { THEME_COLORS } from '@/lib/theme';
 
 type Theme = 'dark' | 'light';
@@ -13,13 +14,27 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>('dark');
+  const systemColorScheme = useColorScheme();
+  const [theme, setTheme] = useState<Theme>((systemColorScheme as Theme) || 'dark');
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  useEffect(() => {
+    // Usar el tema del sistema cuando la app se monta
+    if (systemColorScheme) {
+      setTheme(systemColorScheme as Theme);
+    }
+    setIsInitialized(true);
+  }, []);
 
   const colors = THEME_COLORS[theme];
 
   const toggleTheme = () => {
     setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
   };
+
+  if (!isInitialized) {
+    return null;
+  }
 
   return (
     <ThemeContext.Provider value={{ theme, colors, toggleTheme, setTheme }}>
