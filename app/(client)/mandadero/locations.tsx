@@ -1,10 +1,8 @@
-import { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, Alert, ActivityIndicator, Linking } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, Alert } from 'react-native';
 import { router } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Ionicons } from '@expo/vector-icons';
-import * as Location from 'expo-location';
 import { Input } from '@/components/ui/Input';
 import { useErrandStore } from '@/stores/errandStore';
 import { useTheme } from '@/context/ThemeContext';
@@ -14,8 +12,6 @@ import { estimateDistancePlaceholder } from '@/lib/pricing';
 export default function MandaderoLocationsScreen() {
   const { draft, updateDraft } = useErrandStore();
   const { colors } = useTheme();
-  const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | null>(null);
-  const [locationLoading, setLocationLoading] = useState(true);
 
   const {
     control,
@@ -30,29 +26,6 @@ export default function MandaderoLocationsScreen() {
       delivery_reference: draft.deliveryReference,
     },
   });
-
-  useEffect(() => {
-    (async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        Alert.alert('Permiso denegado', 'Se necesita acceso a la ubicación para usar el mapa');
-        setLocationLoading(false);
-        return;
-      }
-
-      try {
-        const location = await Location.getCurrentPositionAsync({});
-        setUserLocation({
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-        });
-      } catch (error) {
-        console.log('Error obteniendo ubicación:', error);
-      } finally {
-        setLocationLoading(false);
-      }
-    })();
-  }, []);
 
   const handleContinue = (data: ErrandLocationFormData) => {
     if (!data.pickup_address || !data.delivery_address) {
@@ -69,24 +42,6 @@ export default function MandaderoLocationsScreen() {
       estimatedKm: km,
     });
     router.push('/(client)/mandadero/summary');
-  };
-
-  const openMapForPickup = async () => {
-    if (!userLocation) {
-      Alert.alert('Ubicación no disponible', 'No se pudo obtener tu ubicación');
-      return;
-    }
-    const url = `https://maps.google.com/?q=${userLocation.latitude},${userLocation.longitude}`;
-    await Linking.openURL(url);
-  };
-
-  const openMapForDelivery = async () => {
-    if (!userLocation) {
-      Alert.alert('Ubicación no disponible', 'No se pudo obtener tu ubicación');
-      return;
-    }
-    const url = `https://maps.google.com/?q=${userLocation.latitude},${userLocation.longitude}`;
-    await Linking.openURL(url);
   };
 
   return (
@@ -110,44 +65,11 @@ export default function MandaderoLocationsScreen() {
             </Text>
           </View>
 
-          {/* Ubicación actual */}
-          {locationLoading ? (
-            <View style={{ alignItems: 'center', paddingVertical: 20, marginBottom: 28 }}>
-              <ActivityIndicator size="large" color={colors.primary} />
-              <Text style={{ color: colors.textMuted, marginTop: 10, fontSize: 14 }}>Obteniendo tu ubicación...</Text>
-            </View>
-          ) : userLocation ? (
-            <View style={{ borderRadius: 18, padding: 16, marginBottom: 28, backgroundColor: colors.surfaceVariant, flexDirection: 'row', alignItems: 'center' }}>
-              <View
-                style={{
-                  width: 44,
-                  height: 44,
-                  borderRadius: 12,
-                  backgroundColor: colors.primary,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginRight: 12,
-                }}
-              >
-                <Ionicons name="location" size={22} color={colors.textOnPrimary} />
-              </View>
-              <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 14, fontWeight: '700', color: colors.textMuted, marginBottom: 2 }}>Tu ubicación actual</Text>
-                <Text style={{ fontSize: 14, fontWeight: '700', color: colors.textOnSurface }}>
-                  {userLocation.latitude.toFixed(4)}, {userLocation.longitude.toFixed(4)}
-                </Text>
-              </View>
-            </View>
-          ) : null}
-
           {/* Recogida */}
           <View style={{ marginBottom: 28 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
               <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: '#FF5A5A', marginRight: 10 }} />
-              <Text style={{ fontSize: 16, fontWeight: '800', color: colors.textOnSurface, flex: 1 }}>Punto de Recogida</Text>
-              <TouchableOpacity onPress={openMapForPickup} style={{ padding: 8 }}>
-                <Ionicons name="map-outline" size={18} color={colors.primary} />
-              </TouchableOpacity>
+              <Text style={{ fontSize: 16, fontWeight: '800', color: colors.textOnSurface }}>Punto de Recogida</Text>
             </View>
 
             <Controller
@@ -155,7 +77,7 @@ export default function MandaderoLocationsScreen() {
               name="pickup_address"
               render={({ field: { onChange, onBlur, value } }) => (
                 <Input
-                  placeholder="Dirección de recogida"
+                  placeholder="Dirección de recogida (ej: Carrera 7 #45-89)"
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
@@ -184,10 +106,7 @@ export default function MandaderoLocationsScreen() {
           <View style={{ marginBottom: 32 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
               <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: colors.primary, marginRight: 10 }} />
-              <Text style={{ fontSize: 16, fontWeight: '800', color: colors.textOnSurface, flex: 1 }}>Punto de Entrega</Text>
-              <TouchableOpacity onPress={openMapForDelivery} style={{ padding: 8 }}>
-                <Ionicons name="map-outline" size={18} color={colors.primary} />
-              </TouchableOpacity>
+              <Text style={{ fontSize: 16, fontWeight: '800', color: colors.textOnSurface }}>Punto de Entrega</Text>
             </View>
 
             <Controller
@@ -195,7 +114,7 @@ export default function MandaderoLocationsScreen() {
               name="delivery_address"
               render={({ field: { onChange, onBlur, value } }) => (
                 <Input
-                  placeholder="Dirección de entrega"
+                  placeholder="Dirección de entrega (ej: Calle 12 #34-56)"
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
