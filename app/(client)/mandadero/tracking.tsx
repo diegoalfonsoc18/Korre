@@ -3,20 +3,10 @@ import { View, Text, TouchableOpacity, ScrollView, Linking } from 'react-native'
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useErrandStore } from '@/stores/errandStore';
+import { useTheme } from '@/context/ThemeContext';
 import { formatCOP, ERRAND_STATUS_LABELS, ERRAND_CATEGORY_LABELS } from '@/lib/pricing';
 import { supabase } from '@/lib/supabase';
 import { Errand } from '@/types/database.types';
-
-const COLORS = {
-  primary: '#C8FF00',
-  surface: '#1A1A2E',
-  surfaceVariant: '#2D2D3A',
-  textOnSurface: '#FFFFFF',
-  textOnPrimary: '#1A1A2E',
-  textMuted: '#9E9EB0',
-  success: '#4ADE80',
-  danger: '#FF5A5A',
-};
 
 const STATUS_STEPS = [
   { key: 'accepted', label: 'Mandado aceptado' },
@@ -40,6 +30,7 @@ function getStepState(
 
 export default function MandaderoTrackingScreen() {
   const { activeErrand, setActiveErrand } = useErrandStore();
+  const { colors } = useTheme();
 
   useEffect(() => {
     if (!activeErrand) return;
@@ -68,21 +59,21 @@ export default function MandaderoTrackingScreen() {
 
   if (!activeErrand) {
     return (
-      <View style={{ flex: 1, backgroundColor: COLORS.surface, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 20 }}>
+      <View style={{ flex: 1, backgroundColor: colors.surface, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 20 }}>
         <View
           style={{
             width: 80,
             height: 80,
             borderRadius: 24,
-            backgroundColor: COLORS.surfaceVariant,
+            backgroundColor: colors.surfaceVariant,
             alignItems: 'center',
             justifyContent: 'center',
             marginBottom: 16,
           }}
         >
-          <Ionicons name="checkmark-circle" size={40} color={COLORS.primary} />
+          <Ionicons name="checkmark-circle" size={40} color={colors.primary} />
         </View>
-        <Text style={{ fontSize: 18, fontWeight: '700', marginBottom: 24, color: COLORS.textOnSurface }}>
+        <Text style={{ fontSize: 18, fontWeight: '700', marginBottom: 24, color: colors.textOnSurface }}>
           No hay mandado activo
         </Text>
         <TouchableOpacity
@@ -91,10 +82,10 @@ export default function MandaderoTrackingScreen() {
             paddingVertical: 14,
             paddingHorizontal: 28,
             borderRadius: 14,
-            backgroundColor: COLORS.primary,
+            backgroundColor: colors.primary,
           }}
         >
-          <Text style={{ fontSize: 15, fontWeight: '700', color: COLORS.textOnPrimary }}>
+          <Text style={{ fontSize: 15, fontWeight: '700', color: colors.textOnPrimary }}>
             Volver al inicio
           </Text>
         </TouchableOpacity>
@@ -112,14 +103,14 @@ export default function MandaderoTrackingScreen() {
   const isCancelled = activeErrand.status === 'cancelled';
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: COLORS.surface }} showsVerticalScrollIndicator={false}>
+    <ScrollView style={{ flex: 1, backgroundColor: colors.surface }} showsVerticalScrollIndicator={false}>
       <View style={{ paddingHorizontal: 20, paddingTop: 56, paddingBottom: 32 }}>
         {/* Header */}
         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 24 }}>
           <TouchableOpacity onPress={() => router.replace('/(client)/home')} style={{ marginRight: 12 }}>
-            <Ionicons name="arrow-back" size={24} color={COLORS.textOnSurface} />
+            <Ionicons name="arrow-back" size={24} color={colors.textOnSurface} />
           </TouchableOpacity>
-          <Text style={{ fontSize: 20, fontWeight: '700', color: COLORS.textOnSurface }}>
+          <Text style={{ fontSize: 20, fontWeight: '700', color: colors.textOnSurface }}>
             Tu Mandado
           </Text>
         </View>
@@ -132,18 +123,18 @@ export default function MandaderoTrackingScreen() {
             marginBottom: 16,
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: COLORS.surfaceVariant,
+            backgroundColor: colors.surfaceVariant,
           }}
         >
-          <Ionicons name="map-outline" size={48} color={COLORS.textMuted} />
-          <Text style={{ fontSize: 13, color: COLORS.textMuted, marginTop: 8 }}>
+          <Ionicons name="map-outline" size={48} color={colors.textMuted} />
+          <Text style={{ fontSize: 13, color: colors.textMuted, marginTop: 8 }}>
             Mapa en tiempo real proximamente
           </Text>
         </View>
 
         {/* Driver card */}
         {activeErrand.driver && (
-          <View style={{ borderRadius: 16, padding: 16, marginBottom: 16, backgroundColor: COLORS.surfaceVariant }}>
+          <View style={{ borderRadius: 16, padding: 16, marginBottom: 16, backgroundColor: colors.surfaceVariant }}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <View
                 style={{
@@ -153,19 +144,19 @@ export default function MandaderoTrackingScreen() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   marginRight: 12,
-                  backgroundColor: COLORS.surface,
+                  backgroundColor: colors.surface,
                 }}
               >
-                <Ionicons name="person" size={24} color={COLORS.primary} />
+                <Ionicons name="person" size={24} color={colors.primary} />
               </View>
               <View style={{ flex: 1 }}>
-                <Text style={{ color: COLORS.textOnSurface, fontSize: 16, fontWeight: '700' }}>
+                <Text style={{ color: colors.textOnSurface, fontSize: 16, fontWeight: '700' }}>
                   {activeErrand.driver.full_name}
                 </Text>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4 }}>
-                  <Ionicons name="star" size={12} color={COLORS.primary} />
-                  <Text style={{ color: COLORS.textMuted, fontSize: 12, marginLeft: 4 }}>4.9</Text>
-                  <Ionicons name="bicycle-outline" size={12} color={COLORS.textMuted} style={{ marginLeft: 8 }} />
+                  <Ionicons name="star" size={12} color={colors.primary} />
+                  <Text style={{ color: colors.textMuted, fontSize: 12, marginLeft: 4 }}>4.9</Text>
+                  <Ionicons name="bicycle-outline" size={12} color={colors.textMuted} style={{ marginLeft: 8 }} />
                 </View>
               </View>
               <View style={{ flexDirection: 'row', gap: 8 }}>
@@ -175,10 +166,10 @@ export default function MandaderoTrackingScreen() {
                     paddingVertical: 8,
                     paddingHorizontal: 14,
                     borderRadius: 10,
-                    backgroundColor: COLORS.primary,
+                    backgroundColor: colors.primary,
                   }}
                 >
-                  <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.textOnPrimary }}>
+                  <Text style={{ fontSize: 12, fontWeight: '700', color: colors.textOnPrimary }}>
                     Llamar
                   </Text>
                 </TouchableOpacity>
@@ -187,10 +178,10 @@ export default function MandaderoTrackingScreen() {
                     paddingVertical: 8,
                     paddingHorizontal: 14,
                     borderRadius: 10,
-                    backgroundColor: COLORS.surface,
+                    backgroundColor: colors.surface,
                   }}
                 >
-                  <Text style={{ fontSize: 12, fontWeight: '700', color: COLORS.textOnSurface }}>
+                  <Text style={{ fontSize: 12, fontWeight: '700', color: colors.textOnSurface }}>
                     Chat
                   </Text>
                 </TouchableOpacity>
@@ -201,8 +192,8 @@ export default function MandaderoTrackingScreen() {
 
         {/* Status timeline */}
         {!isCancelled && (
-          <View style={{ borderRadius: 16, padding: 16, marginBottom: 16, backgroundColor: COLORS.surfaceVariant }}>
-            <Text style={{ fontSize: 16, fontWeight: '700', marginBottom: 16, color: COLORS.textOnSurface }}>
+          <View style={{ borderRadius: 16, padding: 16, marginBottom: 16, backgroundColor: colors.surfaceVariant }}>
+            <Text style={{ fontSize: 16, fontWeight: '700', marginBottom: 16, color: colors.textOnSurface }}>
               Estado del mandado
             </Text>
             {STATUS_STEPS.map((step, index) => {
@@ -218,17 +209,17 @@ export default function MandaderoTrackingScreen() {
                         alignItems: 'center',
                         justifyContent: 'center',
                         backgroundColor:
-                          state === 'done' ? COLORS.success
-                          : state === 'active' ? COLORS.primary
-                          : COLORS.surface,
+                          state === 'done' ? colors.success
+                          : state === 'active' ? colors.primary
+                          : colors.surface,
                       }}
                     >
                       {state === 'done' ? (
-                        <Ionicons name="checkmark" size={16} color={COLORS.textOnPrimary} />
+                        <Ionicons name="checkmark" size={16} color={colors.textOnPrimary} />
                       ) : state === 'active' ? (
-                        <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: COLORS.textOnPrimary }} />
+                        <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: colors.textOnPrimary }} />
                       ) : (
-                        <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: COLORS.textMuted }} />
+                        <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: colors.textMuted }} />
                       )}
                     </View>
                     {index < STATUS_STEPS.length - 1 && (
@@ -236,7 +227,7 @@ export default function MandaderoTrackingScreen() {
                         style={{
                           width: 2,
                           height: 24,
-                          backgroundColor: state === 'done' || state === 'active' ? COLORS.primary : COLORS.surface,
+                          backgroundColor: state === 'done' || state === 'active' ? colors.primary : colors.surface,
                         }}
                       />
                     )}
@@ -246,13 +237,13 @@ export default function MandaderoTrackingScreen() {
                       style={{
                         fontSize: 14,
                         fontWeight: '600',
-                        color: state === 'pending' ? COLORS.textMuted : COLORS.textOnSurface,
+                        color: state === 'pending' ? colors.textMuted : colors.textOnSurface,
                       }}
                     >
                       {step.label}
                     </Text>
                     {state === 'active' && (
-                      <Text style={{ fontSize: 12, marginTop: 2, color: COLORS.textMuted }}>
+                      <Text style={{ fontSize: 12, marginTop: 2, color: colors.textMuted }}>
                         {ERRAND_STATUS_LABELS[activeErrand.status]}...
                       </Text>
                     )}
@@ -265,9 +256,9 @@ export default function MandaderoTrackingScreen() {
 
         {/* Cancelled state */}
         {isCancelled && (
-          <View style={{ borderRadius: 16, padding: 16, marginBottom: 16, alignItems: 'center', backgroundColor: 'rgba(255,90,90,0.1)', borderWidth: 1, borderColor: 'rgba(255,90,90,0.2)' }}>
-            <Ionicons name="close-circle" size={48} color={COLORS.danger} />
-            <Text style={{ fontSize: 16, fontWeight: '700', marginTop: 8, color: COLORS.danger }}>
+          <View style={{ borderRadius: 16, padding: 16, marginBottom: 16, alignItems: 'center', backgroundColor: colors.danger + '15', borderWidth: 1, borderColor: colors.danger + '25' }}>
+            <Ionicons name="close-circle" size={48} color={colors.danger} />
+            <Text style={{ fontSize: 16, fontWeight: '700', marginTop: 8, color: colors.danger }}>
               Mandado cancelado
             </Text>
           </View>
@@ -275,8 +266,8 @@ export default function MandaderoTrackingScreen() {
 
         {/* Evidence photos */}
         {activeErrand.evidence_photos && activeErrand.evidence_photos.length > 0 && (
-          <View style={{ borderRadius: 16, padding: 16, marginBottom: 16, backgroundColor: COLORS.surfaceVariant }}>
-            <Text style={{ fontSize: 16, fontWeight: '700', marginBottom: 12, color: COLORS.textOnSurface }}>
+          <View style={{ borderRadius: 16, padding: 16, marginBottom: 16, backgroundColor: colors.surfaceVariant }}>
+            <Text style={{ fontSize: 16, fontWeight: '700', marginBottom: 12, color: colors.textOnSurface }}>
               Evidencia
             </Text>
             <View style={{ flexDirection: 'row', gap: 8 }}>
@@ -289,10 +280,10 @@ export default function MandaderoTrackingScreen() {
                     borderRadius: 12,
                     alignItems: 'center',
                     justifyContent: 'center',
-                    backgroundColor: COLORS.surface,
+                    backgroundColor: colors.surface,
                   }}
                 >
-                  <Ionicons name="image-outline" size={28} color={COLORS.textMuted} />
+                  <Ionicons name="image-outline" size={28} color={colors.textMuted} />
                 </View>
               ))}
             </View>
@@ -300,16 +291,16 @@ export default function MandaderoTrackingScreen() {
         )}
 
         {/* Mandado summary */}
-        <View style={{ borderRadius: 16, padding: 16, marginBottom: 16, backgroundColor: COLORS.surfaceVariant }}>
+        <View style={{ borderRadius: 16, padding: 16, marginBottom: 16, backgroundColor: colors.surfaceVariant }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Ionicons name="receipt-outline" size={16} color={COLORS.textMuted} />
-              <Text style={{ fontSize: 13, marginLeft: 8, color: COLORS.textMuted }}>
+              <Ionicons name="receipt-outline" size={16} color={colors.textMuted} />
+              <Text style={{ fontSize: 13, marginLeft: 8, color: colors.textMuted }}>
                 {ERRAND_CATEGORY_LABELS[activeErrand.category]} — {formatCOP(activeErrand.total_price)}
               </Text>
             </View>
           </View>
-          <Text style={{ fontSize: 12, marginTop: 8, color: COLORS.textMuted }}>
+          <Text style={{ fontSize: 12, marginTop: 8, color: colors.textMuted }}>
             {activeErrand.pickup_address} → {activeErrand.delivery_address}
           </Text>
         </View>
@@ -325,10 +316,10 @@ export default function MandaderoTrackingScreen() {
               paddingVertical: 16,
               borderRadius: 14,
               alignItems: 'center',
-              backgroundColor: COLORS.primary,
+              backgroundColor: colors.primary,
             }}
           >
-            <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.textOnPrimary }}>
+            <Text style={{ fontSize: 16, fontWeight: '700', color: colors.textOnPrimary }}>
               Volver al inicio
             </Text>
           </TouchableOpacity>

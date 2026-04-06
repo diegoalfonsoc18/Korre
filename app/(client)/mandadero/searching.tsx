@@ -3,21 +3,14 @@ import { View, Text, TouchableOpacity, Animated, Alert } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useErrandStore } from '@/stores/errandStore';
+import { useTheme } from '@/context/ThemeContext';
 import { errandService } from '@/services/errandService';
 import { formatCOP } from '@/lib/pricing';
 import { supabase } from '@/lib/supabase';
 
-const COLORS = {
-  primary: '#C8FF00',
-  surface: '#1A1A2E',
-  surfaceVariant: '#2D2D3A',
-  textOnSurface: '#FFFFFF',
-  textOnPrimary: '#1A1A2E',
-  textMuted: '#9E9EB0',
-};
-
 export default function MandaderoSearchingScreen() {
   const { activeErrand, setActiveErrand } = useErrandStore();
+  const { colors } = useTheme();
   const pulse1 = useRef(new Animated.Value(0.4)).current;
   const pulse2 = useRef(new Animated.Value(0.3)).current;
   const pulse3 = useRef(new Animated.Value(0.2)).current;
@@ -54,7 +47,6 @@ export default function MandaderoSearchingScreen() {
     };
   }, []);
 
-  // Listen for errand status changes
   useEffect(() => {
     if (!activeErrand) return;
 
@@ -111,7 +103,7 @@ export default function MandaderoSearchingScreen() {
   const total = activeErrand?.total_price ?? 0;
 
   return (
-    <View style={{ flex: 1, backgroundColor: COLORS.surface, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 20 }}>
+    <View style={{ flex: 1, backgroundColor: colors.surface, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 20 }}>
       {/* Pulse animation */}
       <View style={{ width: 200, height: 200, alignItems: 'center', justifyContent: 'center', marginBottom: 32 }}>
         <Animated.View
@@ -120,7 +112,7 @@ export default function MandaderoSearchingScreen() {
             width: 200,
             height: 200,
             borderRadius: 100,
-            backgroundColor: COLORS.primary,
+            backgroundColor: colors.primary,
             opacity: pulse3,
             transform: [{ scale: pulse3 }],
           }}
@@ -131,7 +123,7 @@ export default function MandaderoSearchingScreen() {
             width: 150,
             height: 150,
             borderRadius: 75,
-            backgroundColor: COLORS.primary,
+            backgroundColor: colors.primary,
             opacity: pulse2,
             transform: [{ scale: pulse2 }],
           }}
@@ -142,7 +134,7 @@ export default function MandaderoSearchingScreen() {
             width: 100,
             height: 100,
             borderRadius: 50,
-            backgroundColor: COLORS.primary,
+            backgroundColor: colors.primary,
             opacity: pulse1,
             transform: [{ scale: pulse1 }],
           }}
@@ -154,38 +146,38 @@ export default function MandaderoSearchingScreen() {
             borderRadius: 40,
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: COLORS.primary,
+            backgroundColor: colors.primary,
           }}
         >
-          <Ionicons name="bicycle-outline" size={40} color={COLORS.textOnPrimary} />
+          <Ionicons name="bicycle-outline" size={40} color={colors.textOnPrimary} />
         </View>
       </View>
 
       {/* Text */}
-      <Text style={{ fontSize: 24, fontWeight: '800', marginBottom: 8, color: COLORS.textOnSurface }}>
+      <Text style={{ fontSize: 24, fontWeight: '800', marginBottom: 8, color: colors.textOnSurface }}>
         Buscando mandadero...
       </Text>
-      <Text style={{ fontSize: 14, textAlign: 'center', marginBottom: 32, color: COLORS.textMuted }}>
+      <Text style={{ fontSize: 14, textAlign: 'center', marginBottom: 32, color: colors.textMuted }}>
         Encontrando el mejor mandadero cerca de ti
       </Text>
 
       {/* Info cards */}
       <View style={{ flexDirection: 'row', gap: 12, marginBottom: 32, width: '100%' }}>
-        <View style={{ flex: 1, alignItems: 'center', paddingVertical: 14, borderRadius: 14, backgroundColor: COLORS.surfaceVariant }}>
-          <Ionicons name="navigate-outline" size={20} color={COLORS.primary} />
-          <Text style={{ fontSize: 13, fontWeight: '700', marginTop: 4, color: COLORS.textOnSurface }}>
+        <View style={{ flex: 1, alignItems: 'center', paddingVertical: 14, borderRadius: 14, backgroundColor: colors.surfaceVariant }}>
+          <Ionicons name="navigate-outline" size={20} color={colors.primary} />
+          <Text style={{ fontSize: 13, fontWeight: '700', marginTop: 4, color: colors.textOnSurface }}>
             {km.toFixed(1)} km
           </Text>
         </View>
-        <View style={{ flex: 1, alignItems: 'center', paddingVertical: 14, borderRadius: 14, backgroundColor: COLORS.surfaceVariant }}>
-          <Ionicons name="time-outline" size={20} color={COLORS.primary} />
-          <Text style={{ fontSize: 13, fontWeight: '700', marginTop: 4, color: COLORS.textOnSurface }}>
+        <View style={{ flex: 1, alignItems: 'center', paddingVertical: 14, borderRadius: 14, backgroundColor: colors.surfaceVariant }}>
+          <Ionicons name="time-outline" size={20} color={colors.primary} />
+          <Text style={{ fontSize: 13, fontWeight: '700', marginTop: 4, color: colors.textOnSurface }}>
             ~{Math.round(km * 5 + 10)} min
           </Text>
         </View>
-        <View style={{ flex: 1, alignItems: 'center', paddingVertical: 14, borderRadius: 14, backgroundColor: COLORS.surfaceVariant }}>
-          <Ionicons name="wallet-outline" size={20} color={COLORS.primary} />
-          <Text style={{ fontSize: 13, fontWeight: '700', marginTop: 4, color: COLORS.textOnSurface }}>
+        <View style={{ flex: 1, alignItems: 'center', paddingVertical: 14, borderRadius: 14, backgroundColor: colors.surfaceVariant }}>
+          <Ionicons name="wallet-outline" size={20} color={colors.primary} />
+          <Text style={{ fontSize: 13, fontWeight: '700', marginTop: 4, color: colors.textOnSurface }}>
             {formatCOP(total)}
           </Text>
         </View>
@@ -193,7 +185,7 @@ export default function MandaderoSearchingScreen() {
 
       {/* Cancel */}
       <TouchableOpacity onPress={handleCancel}>
-        <Text style={{ fontSize: 14, fontWeight: '600', color: '#FF5A5A' }}>
+        <Text style={{ fontSize: 14, fontWeight: '600', color: colors.danger }}>
           Cancelar solicitud
         </Text>
       </TouchableOpacity>
