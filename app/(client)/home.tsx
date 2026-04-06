@@ -34,8 +34,8 @@ export default function ClientHomeScreen() {
   const hasActiveOrder = activeOrder && !['delivered', 'cancelled'].includes(activeOrder.status);
   const hasActiveErrand = activeErrand && !['delivered', 'cancelled'].includes(activeErrand.status);
 
-  const recentOrders = orderHistory?.slice(0, 3) ?? [];
-  const recentErrands = errandHistory?.slice(0, 3) ?? [];
+  const recentOrders = orderHistory?.slice(0, 2) ?? [];
+  const recentErrands = errandHistory?.slice(0, 2) ?? [];
   const hasHistory = recentOrders.length > 0 || recentErrands.length > 0;
 
   return (
@@ -43,46 +43,46 @@ export default function ClientHomeScreen() {
       <StatusBar barStyle={theme === 'dark' ? 'light-content' : 'dark-content'} />
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 32 }}
+        contentContainerStyle={{ paddingBottom: 40 }}
       >
         {/* ─── Header ─── */}
-        <View style={{ paddingTop: 56, paddingHorizontal: 20, paddingBottom: 20 }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+        <View style={{ paddingTop: 56, paddingHorizontal: 20, paddingBottom: 32 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
               <View
                 style={{
-                  width: 46,
-                  height: 46,
-                  borderRadius: 23,
+                  width: 48,
+                  height: 48,
+                  borderRadius: 24,
                   backgroundColor: colors.primary,
                   alignItems: 'center',
                   justifyContent: 'center',
-                  marginRight: 12,
+                  marginRight: 14,
                 }}
               >
-                <Text style={{ color: colors.textOnPrimary, fontSize: 18, fontWeight: '800' }}>
+                <Text style={{ color: colors.textOnPrimary, fontSize: 18, fontWeight: '900' }}>
                   {firstName.charAt(0).toUpperCase()}
                 </Text>
               </View>
               <View>
-                <Text style={{ color: colors.textOnSurface, fontSize: 18, fontWeight: '700' }}>
+                <Text style={{ color: colors.textOnSurface, fontSize: 20, fontWeight: '900' }}>
                   Hola, {firstName}
                 </Text>
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 2 }}>
-                  <Ionicons name="location-sharp" size={13} color={colors.primary} />
-                  <Text style={{ color: colors.textMuted, fontSize: 13, marginLeft: 4 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 3 }}>
+                  <Ionicons name="location-sharp" size={12} color={colors.primary} />
+                  <Text style={{ color: colors.textMuted, fontSize: 12, marginLeft: 4 }}>
                     Bogota, Colombia
                   </Text>
                 </View>
               </View>
             </View>
 
-            <View style={{ flexDirection: 'row', gap: 8 }}>
+            <View style={{ flexDirection: 'row', gap: 10 }}>
               <TouchableOpacity
                 onPress={toggleTheme}
                 style={{
-                  width: 42,
-                  height: 42,
+                  width: 44,
+                  height: 44,
                   borderRadius: 14,
                   backgroundColor: colors.surfaceVariant,
                   alignItems: 'center',
@@ -95,8 +95,8 @@ export default function ClientHomeScreen() {
               <TouchableOpacity
                 onPress={() => router.push('/(client)/orders')}
                 style={{
-                  width: 42,
-                  height: 42,
+                  width: 44,
+                  height: 44,
                   borderRadius: 14,
                   backgroundColor: colors.surfaceVariant,
                   alignItems: 'center',
@@ -111,88 +111,88 @@ export default function ClientHomeScreen() {
         </View>
 
         {/* ─── Active Order/Errand Banner ─── */}
-        {hasActiveOrder && (
-          <View style={{ paddingHorizontal: 20, marginBottom: 16 }}>
-            <TouchableOpacity
-              activeOpacity={0.85}
-              onPress={() => router.push('/(client)/tracking')}
-              style={{
-                backgroundColor: colors.primary,
-                borderRadius: 16,
-                padding: 16,
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-            >
-              <View
+        {(hasActiveOrder || hasActiveErrand) && (
+          <View style={{ paddingHorizontal: 20, marginBottom: 32, gap: 10 }}>
+            {hasActiveOrder && (
+              <TouchableOpacity
+                activeOpacity={0.85}
+                onPress={() => router.push('/(client)/tracking')}
                 style={{
-                  width: 44,
-                  height: 44,
-                  borderRadius: 14,
-                  backgroundColor: `${colors.textOnPrimary}20`,
+                  backgroundColor: colors.primary,
+                  borderRadius: 18,
+                  padding: 18,
+                  flexDirection: 'row',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  marginRight: 14,
                 }}
               >
-                <Ionicons name="cube" size={22} color={colors.textOnPrimary} />
-              </View>
-              <View style={{ flex: 1 }}>
-                <Text style={{ color: colors.textOnPrimary, fontSize: 15, fontWeight: '700' }}>
-                  Envio en curso
-                </Text>
-                <Text style={{ color: `${colors.textOnPrimary}99`, fontSize: 13, fontWeight: '500', marginTop: 2 }}>
-                  {STATUS_LABELS[activeOrder.status] ?? activeOrder.status}
-                </Text>
-              </View>
-              <Ionicons name="chevron-forward" size={20} color={colors.textOnPrimary} />
-            </TouchableOpacity>
-          </View>
-        )}
+                <View
+                  style={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: 14,
+                    backgroundColor: `${colors.textOnPrimary}18`,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginRight: 14,
+                  }}
+                >
+                  <Ionicons name="cube" size={24} color={colors.textOnPrimary} />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={{ color: colors.textOnPrimary, fontSize: 16, fontWeight: '800' }}>
+                    Envío en curso
+                  </Text>
+                  <Text style={{ color: `${colors.textOnPrimary}BB`, fontSize: 13, fontWeight: '500', marginTop: 2 }}>
+                    {STATUS_LABELS[activeOrder.status] ?? activeOrder.status}
+                  </Text>
+                </View>
+                <Ionicons name="chevron-forward" size={22} color={colors.textOnPrimary} />
+              </TouchableOpacity>
+            )}
 
-        {hasActiveErrand && (
-          <View style={{ paddingHorizontal: 20, marginBottom: 16 }}>
-            <TouchableOpacity
-              activeOpacity={0.85}
-              onPress={() => router.push('/(client)/mandadero/tracking')}
-              style={{
-                backgroundColor: colors.primary,
-                borderRadius: 16,
-                padding: 16,
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-            >
-              <View
+            {hasActiveErrand && (
+              <TouchableOpacity
+                activeOpacity={0.85}
+                onPress={() => router.push('/(client)/mandadero/tracking')}
                 style={{
-                  width: 44,
-                  height: 44,
-                  borderRadius: 14,
-                  backgroundColor: `${colors.textOnPrimary}20`,
+                  backgroundColor: colors.primary,
+                  borderRadius: 18,
+                  padding: 18,
+                  flexDirection: 'row',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  marginRight: 14,
                 }}
               >
-                <Ionicons name="walk" size={22} color={colors.textOnPrimary} />
-              </View>
-              <View style={{ flex: 1 }}>
-                <Text style={{ color: colors.textOnPrimary, fontSize: 15, fontWeight: '700' }}>
-                  Mandado en curso
-                </Text>
-                <Text style={{ color: `${colors.textOnPrimary}99`, fontSize: 13, fontWeight: '500', marginTop: 2 }}>
-                  {STATUS_LABELS[activeErrand.status] ?? activeErrand.status}
-                </Text>
-              </View>
-              <Ionicons name="chevron-forward" size={20} color={colors.textOnPrimary} />
-            </TouchableOpacity>
+                <View
+                  style={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: 14,
+                    backgroundColor: `${colors.textOnPrimary}18`,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginRight: 14,
+                  }}
+                >
+                  <Ionicons name="walk" size={24} color={colors.textOnPrimary} />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={{ color: colors.textOnPrimary, fontSize: 16, fontWeight: '800' }}>
+                    Mandado en curso
+                  </Text>
+                  <Text style={{ color: `${colors.textOnPrimary}BB`, fontSize: 13, fontWeight: '500', marginTop: 2 }}>
+                    {STATUS_LABELS[activeErrand.status] ?? activeErrand.status}
+                  </Text>
+                </View>
+                <Ionicons name="chevron-forward" size={22} color={colors.textOnPrimary} />
+              </TouchableOpacity>
+            )}
           </View>
         )}
 
         {/* ─── Hero: Que necesitas? ─── */}
-        <View style={{ paddingHorizontal: 20, marginBottom: 28 }}>
-          <Text style={{ color: colors.textOnSurface, fontSize: 24, fontWeight: '800', marginBottom: 16 }}>
-            ¿Que necesitas hoy?
+        <View style={{ paddingHorizontal: 20, marginBottom: 36 }}>
+          <Text style={{ color: colors.textOnSurface, fontSize: 28, fontWeight: '900', marginBottom: 20, letterSpacing: -0.5 }}>
+            ¿Qué necesitas?
           </Text>
 
           {/* Enviar paquete - Card principal */}
@@ -204,58 +204,57 @@ export default function ClientHomeScreen() {
             }}
             style={{
               backgroundColor: colors.primary,
-              borderRadius: 20,
-              padding: 24,
-              marginBottom: 12,
+              borderRadius: 22,
+              padding: 28,
+              marginBottom: 14,
               overflow: 'hidden',
             }}
           >
             <View
               style={{
                 position: 'absolute',
-                top: -20,
-                right: -20,
-                width: 120,
-                height: 120,
-                borderRadius: 60,
-                backgroundColor: `${colors.textOnPrimary}14`,
+                top: -30,
+                right: -30,
+                width: 140,
+                height: 140,
+                borderRadius: 70,
+                backgroundColor: `${colors.textOnPrimary}10`,
               }}
             />
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
               <View
                 style={{
-                  width: 48,
-                  height: 48,
+                  width: 56,
+                  height: 56,
                   borderRadius: 16,
-                  backgroundColor: `${colors.textOnPrimary}1F`,
+                  backgroundColor: `${colors.textOnPrimary}20`,
                   alignItems: 'center',
                   justifyContent: 'center',
-                  marginRight: 14,
+                  marginRight: 16,
                 }}
               >
-                <Ionicons name="cube-outline" size={26} color={colors.textOnPrimary} />
+                <Ionicons name="cube-outline" size={28} color={colors.textOnPrimary} />
               </View>
               <View style={{ flex: 1 }}>
-                <Text style={{ color: colors.textOnPrimary, fontSize: 20, fontWeight: '800' }}>
+                <Text style={{ color: colors.textOnPrimary, fontSize: 22, fontWeight: '900', letterSpacing: -0.3 }}>
                   Enviar paquete
                 </Text>
-                <Text style={{ color: `${colors.textOnPrimary}8C`, fontSize: 14, fontWeight: '600', marginTop: 2 }}>
+                <Text style={{ color: `${colors.textOnPrimary}99`, fontSize: 14, fontWeight: '600', marginTop: 2 }}>
                   Moto o moto carguero
                 </Text>
               </View>
-              <Ionicons name="arrow-forward-circle" size={32} color={colors.textOnPrimary} />
             </View>
             <View style={{ flexDirection: 'row', gap: 16 }}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Ionicons name="flash" size={14} color={colors.textOnPrimary} />
-                <Text style={{ color: `${colors.textOnPrimary}B3`, fontSize: 12, fontWeight: '600', marginLeft: 4 }}>
-                  Recogida inmediata
+                <Text style={{ color: `${colors.textOnPrimary}CC`, fontSize: 12, fontWeight: '700', marginLeft: 6 }}>
+                  Inmediato
                 </Text>
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Ionicons name="shield-checkmark" size={14} color={colors.textOnPrimary} />
-                <Text style={{ color: `${colors.textOnPrimary}B3`, fontSize: 12, fontWeight: '600', marginLeft: 4 }}>
-                  Envio seguro
+                <Text style={{ color: `${colors.textOnPrimary}CC`, fontSize: 12, fontWeight: '700', marginLeft: 6 }}>
+                  Seguro
                 </Text>
               </View>
             </View>
@@ -270,60 +269,57 @@ export default function ClientHomeScreen() {
             }}
             style={{
               backgroundColor: colors.surfaceVariant,
-              borderRadius: 20,
-              padding: 24,
-              borderWidth: 1,
-              borderColor: `${colors.primary}26`,
+              borderRadius: 22,
+              padding: 28,
               overflow: 'hidden',
             }}
           >
             <View
               style={{
                 position: 'absolute',
-                bottom: -20,
-                right: -10,
-                width: 100,
-                height: 100,
-                borderRadius: 50,
-                backgroundColor: `${colors.primary}0A`,
+                bottom: -30,
+                right: -20,
+                width: 120,
+                height: 120,
+                borderRadius: 60,
+                backgroundColor: `${colors.primary}08`,
               }}
             />
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <View
                 style={{
-                  width: 48,
-                  height: 48,
+                  width: 56,
+                  height: 56,
                   borderRadius: 16,
-                  backgroundColor: `${colors.primary}1F`,
+                  backgroundColor: `${colors.primary}18`,
                   alignItems: 'center',
                   justifyContent: 'center',
-                  marginRight: 14,
+                  marginRight: 16,
                 }}
               >
-                <Ionicons name="walk-outline" size={26} color={colors.primary} />
+                <Ionicons name="walk-outline" size={28} color={colors.primary} />
               </View>
               <View style={{ flex: 1 }}>
-                <Text style={{ color: colors.textOnSurface, fontSize: 20, fontWeight: '800' }}>
+                <Text style={{ color: colors.textOnSurface, fontSize: 22, fontWeight: '900', letterSpacing: -0.3 }}>
                   Mandadero Digital
                 </Text>
-                <Text style={{ color: colors.textMuted, fontSize: 14, fontWeight: '500', marginTop: 2 }}>
-                  Te hacemos la vuelta que necesites
+                <Text style={{ color: colors.textMuted, fontSize: 14, fontWeight: '600', marginTop: 2 }}>
+                  Te hacemos el favor
                 </Text>
               </View>
-              <Ionicons name="arrow-forward-circle" size={32} color={colors.primary} />
             </View>
           </TouchableOpacity>
         </View>
 
         {/* ─── Como funciona ─── */}
-        <View style={{ paddingHorizontal: 20, marginBottom: 28 }}>
-          <Text style={{ color: colors.textOnSurface, fontSize: 18, fontWeight: '700', marginBottom: 16 }}>
-            Como funciona
+        <View style={{ paddingHorizontal: 20, marginBottom: 36 }}>
+          <Text style={{ color: colors.textOnSurface, fontSize: 20, fontWeight: '900', marginBottom: 18 }}>
+            Cómo funciona
           </Text>
           <View style={{ gap: 12 }}>
             {[
-              { step: '1', icon: 'location-outline' as const, title: 'Indica las direcciones', desc: 'Recogida y entrega' },
-              { step: '2', icon: 'bicycle-outline' as const, title: 'Elige tu vehiculo', desc: 'Moto o moto carguero' },
+              { step: '1', icon: 'location-outline' as const, title: 'Ubica las direcciones', desc: 'Recogida y entrega' },
+              { step: '2', icon: 'bicycle-outline' as const, title: 'Elige tu vehículo', desc: 'Moto o carguero' },
               { step: '3', icon: 'checkmark-circle-outline' as const, title: 'Confirma y listo', desc: 'Un conductor lo recoge' },
             ].map((item) => (
               <View
@@ -332,32 +328,32 @@ export default function ClientHomeScreen() {
                   flexDirection: 'row',
                   alignItems: 'center',
                   backgroundColor: colors.surfaceVariant,
-                  borderRadius: 14,
-                  padding: 14,
+                  borderRadius: 16,
+                  padding: 16,
                 }}
               >
                 <View
                   style={{
-                    width: 36,
-                    height: 36,
+                    width: 40,
+                    height: 40,
                     borderRadius: 12,
-                    backgroundColor: `${colors.primary}1F`,
+                    backgroundColor: `${colors.primary}20`,
                     alignItems: 'center',
                     justifyContent: 'center',
-                    marginRight: 12,
+                    marginRight: 14,
                   }}
                 >
-                  <Ionicons name={item.icon} size={18} color={colors.primary} />
+                  <Ionicons name={item.icon} size={20} color={colors.primary} />
                 </View>
                 <View style={{ flex: 1 }}>
-                  <Text style={{ color: colors.textOnSurface, fontSize: 14, fontWeight: '700' }}>
+                  <Text style={{ color: colors.textOnSurface, fontSize: 15, fontWeight: '800' }}>
                     {item.title}
                   </Text>
-                  <Text style={{ color: colors.textMuted, fontSize: 12, marginTop: 1 }}>
+                  <Text style={{ color: colors.textMuted, fontSize: 12, marginTop: 2, fontWeight: '500' }}>
                     {item.desc}
                   </Text>
                 </View>
-                <Text style={{ color: `${colors.primary}4D`, fontSize: 24, fontWeight: '900' }}>
+                <Text style={{ color: `${colors.primary}40`, fontSize: 28, fontWeight: '900' }}>
                   {item.step}
                 </Text>
               </View>
@@ -369,11 +365,11 @@ export default function ClientHomeScreen() {
         {hasHistory && (
           <View style={{ paddingHorizontal: 20 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-              <Text style={{ color: colors.textOnSurface, fontSize: 18, fontWeight: '700' }}>
-                Actividad reciente
+              <Text style={{ color: colors.textOnSurface, fontSize: 20, fontWeight: '900' }}>
+                Reciente
               </Text>
               <TouchableOpacity activeOpacity={0.7} onPress={() => router.push('/(client)/orders')}>
-                <Text style={{ color: colors.primary, fontSize: 14, fontWeight: '600' }}>
+                <Text style={{ color: colors.primary, fontSize: 14, fontWeight: '700' }}>
                   Ver todo
                 </Text>
               </TouchableOpacity>
@@ -387,14 +383,14 @@ export default function ClientHomeScreen() {
                     flexDirection: 'row',
                     alignItems: 'center',
                     backgroundColor: colors.surfaceVariant,
-                    borderRadius: 14,
+                    borderRadius: 16,
                     padding: 14,
                   }}
                 >
                   <View
                     style={{
-                      width: 40,
-                      height: 40,
+                      width: 44,
+                      height: 44,
                       borderRadius: 12,
                       backgroundColor: colors.surface,
                       alignItems: 'center',
@@ -402,17 +398,17 @@ export default function ClientHomeScreen() {
                       marginRight: 12,
                     }}
                   >
-                    <Ionicons name="cube" size={18} color={colors.primary} />
+                    <Ionicons name="cube" size={20} color={colors.primary} />
                   </View>
                   <View style={{ flex: 1 }}>
-                    <Text style={{ color: colors.textOnSurface, fontSize: 14, fontWeight: '600' }} numberOfLines={1}>
+                    <Text style={{ color: colors.textOnSurface, fontSize: 14, fontWeight: '700' }} numberOfLines={1}>
                       {order.destination_address}
                     </Text>
                     <Text style={{ color: colors.textMuted, fontSize: 12, marginTop: 2 }}>
                       {STATUS_LABELS[order.status] ?? order.status}
                     </Text>
                   </View>
-                  <Text style={{ color: colors.primary, fontSize: 14, fontWeight: '700' }}>
+                  <Text style={{ color: colors.primary, fontSize: 15, fontWeight: '800' }}>
                     ${order.total_price?.toLocaleString('es-CO') ?? '—'}
                   </Text>
                 </View>
@@ -425,14 +421,14 @@ export default function ClientHomeScreen() {
                     flexDirection: 'row',
                     alignItems: 'center',
                     backgroundColor: colors.surfaceVariant,
-                    borderRadius: 14,
+                    borderRadius: 16,
                     padding: 14,
                   }}
                 >
                   <View
                     style={{
-                      width: 40,
-                      height: 40,
+                      width: 44,
+                      height: 44,
                       borderRadius: 12,
                       backgroundColor: colors.surface,
                       alignItems: 'center',
@@ -440,17 +436,17 @@ export default function ClientHomeScreen() {
                       marginRight: 12,
                     }}
                   >
-                    <Ionicons name="walk" size={18} color={colors.primary} />
+                    <Ionicons name="walk" size={20} color={colors.primary} />
                   </View>
                   <View style={{ flex: 1 }}>
-                    <Text style={{ color: colors.textOnSurface, fontSize: 14, fontWeight: '600' }} numberOfLines={1}>
+                    <Text style={{ color: colors.textOnSurface, fontSize: 14, fontWeight: '700' }} numberOfLines={1}>
                       {errand.description}
                     </Text>
                     <Text style={{ color: colors.textMuted, fontSize: 12, marginTop: 2 }}>
                       {STATUS_LABELS[errand.status] ?? errand.status}
                     </Text>
                   </View>
-                  <Text style={{ color: colors.primary, fontSize: 14, fontWeight: '700' }}>
+                  <Text style={{ color: colors.primary, fontSize: 15, fontWeight: '800' }}>
                     ${errand.total_price?.toLocaleString('es-CO') ?? '—'}
                   </Text>
                 </View>

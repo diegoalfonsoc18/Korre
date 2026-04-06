@@ -3,10 +3,10 @@ export type Theme = 'dark' | 'light';
 export const THEME_COLORS = {
   dark: {
     primary: '#C8FF00',
-    surface: '#1A1A2E',
-    surfaceVariant: '#2D2D3A',
+    surface: '#0F0F1A',
+    surfaceVariant: '#1A1A2E',
     textOnSurface: '#FFFFFF',
-    textOnPrimary: '#1A1A2E',
+    textOnPrimary: '#0F0F1A',
     textMuted: '#9E9EB0',
     success: '#4ADE80',
     danger: '#FF5A5A',
