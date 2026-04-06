@@ -6,7 +6,7 @@ type Theme = 'dark' | 'light';
 
 interface ThemeContextType {
   theme: Theme;
-  colors: typeof THEME_COLORS.dark;
+  colors: (typeof THEME_COLORS)[Theme];
   toggleTheme: () => void;
   setTheme: (theme: Theme) => void;
 }
