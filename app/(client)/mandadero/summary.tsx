@@ -96,7 +96,7 @@ export default function MandaderoSummaryScreen() {
                 marginRight: 14,
               }}
             >
-              <Ionicons name={categoryIcon} size={24} color={colors.textOnPrimary} />
+              <Ionicons name={categoryIcon} size={24} color="#000000" />
             </View>
             <Text style={{ fontSize: 18, fontWeight: '800', color: colors.textOnSurface }}>
               {ERRAND_CATEGORY_LABELS[draft.category ?? 'otro']}

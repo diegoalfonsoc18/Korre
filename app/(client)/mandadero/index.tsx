@@ -100,7 +100,7 @@ export default function MandaderoRequestScreen() {
                     <Ionicons
                       name={cat.icon}
                       size={28}
-                      color={isSelected ? colors.textOnPrimary : colors.primary}
+                      color={isSelected ? colors.textOnPrimary : "#C8FF00"}
                     />
                     <Text
                       style={{

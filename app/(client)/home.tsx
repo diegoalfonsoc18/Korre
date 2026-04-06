@@ -227,13 +227,13 @@ export default function ClientHomeScreen() {
                   width: 56,
                   height: 56,
                   borderRadius: 16,
-                  backgroundColor: `${colors.textOnPrimary}20`,
+                  backgroundColor: `${colors.textOnPrimary}25`,
                   alignItems: 'center',
                   justifyContent: 'center',
                   marginRight: 16,
                 }}
               >
-                <Ionicons name="cube-outline" size={28} color={colors.textOnPrimary} />
+                <Ionicons name="cube-outline" size={28} color="#FFFFFF" />
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={{ color: colors.textOnPrimary, fontSize: 22, fontWeight: '900', letterSpacing: -0.3 }}>
@@ -291,13 +291,13 @@ export default function ClientHomeScreen() {
                   width: 56,
                   height: 56,
                   borderRadius: 16,
-                  backgroundColor: `${colors.primary}18`,
+                  backgroundColor: colors.primary,
                   alignItems: 'center',
                   justifyContent: 'center',
                   marginRight: 16,
                 }}
               >
-                <Ionicons name="walk-outline" size={28} color={colors.primary} />
+                <Ionicons name="walk-outline" size={28} color={colors.textOnPrimary} />
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={{ color: colors.textOnSurface, fontSize: 22, fontWeight: '900', letterSpacing: -0.3 }}>
@@ -337,13 +337,13 @@ export default function ClientHomeScreen() {
                     width: 40,
                     height: 40,
                     borderRadius: 12,
-                    backgroundColor: `${colors.primary}20`,
+                    backgroundColor: colors.primary,
                     alignItems: 'center',
                     justifyContent: 'center',
                     marginRight: 14,
                   }}
                 >
-                  <Ionicons name={item.icon} size={20} color={colors.primary} />
+                  <Ionicons name={item.icon} size={20} color={colors.textOnPrimary} />
                 </View>
                 <View style={{ flex: 1 }}>
                   <Text style={{ color: colors.textOnSurface, fontSize: 15, fontWeight: '800' }}>
@@ -392,13 +392,13 @@ export default function ClientHomeScreen() {
                       width: 44,
                       height: 44,
                       borderRadius: 12,
-                      backgroundColor: colors.surface,
+                      backgroundColor: colors.primary,
                       alignItems: 'center',
                       justifyContent: 'center',
                       marginRight: 12,
                     }}
                   >
-                    <Ionicons name="cube" size={20} color={colors.primary} />
+                    <Ionicons name="cube" size={20} color={colors.textOnPrimary} />
                   </View>
                   <View style={{ flex: 1 }}>
                     <Text style={{ color: colors.textOnSurface, fontSize: 14, fontWeight: '700' }} numberOfLines={1}>
@@ -430,13 +430,13 @@ export default function ClientHomeScreen() {
                       width: 44,
                       height: 44,
                       borderRadius: 12,
-                      backgroundColor: colors.surface,
+                      backgroundColor: colors.primary,
                       alignItems: 'center',
                       justifyContent: 'center',
                       marginRight: 12,
                     }}
                   >
-                    <Ionicons name="walk" size={20} color={colors.primary} />
+                    <Ionicons name="walk" size={20} color={colors.textOnPrimary} />
                   </View>
                   <View style={{ flex: 1 }}>
                     <Text style={{ color: colors.textOnSurface, fontSize: 14, fontWeight: '700' }} numberOfLines={1}>
