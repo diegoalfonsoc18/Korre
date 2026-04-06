@@ -1,8 +1,10 @@
-import { View, Text, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, Alert } from 'react-native';
+import { useState, useRef } from 'react';
+import { View, Text, TouchableOpacity, ScrollView, Alert, WebView as RNWebView } from 'react-native';
 import { router } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Ionicons } from '@expo/vector-icons';
+import { WebView } from 'react-native-webview';
 import { Input } from '@/components/ui/Input';
 import { useErrandStore } from '@/stores/errandStore';
 import { useTheme } from '@/context/ThemeContext';
@@ -12,10 +14,15 @@ import { estimateDistancePlaceholder } from '@/lib/pricing';
 export default function MandaderoLocationsScreen() {
   const { draft, updateDraft } = useErrandStore();
   const { colors } = useTheme();
+  const webViewRef = useRef<WebView>(null);
+  const [selectedMode, setSelectedMode] = useState<'pickup' | 'delivery' | null>(null);
+  const [pickupCoords, setPickupCoords] = useState<string>('');
+  const [deliveryCoords, setDeliveryCoords] = useState<string>('');
 
   const {
     control,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<ErrandLocationFormData>({
     resolver: zodResolver(errandLocationSchema),
@@ -27,17 +34,40 @@ export default function MandaderoLocationsScreen() {
     },
   });
 
+  const handleWebViewMessage = (event: any) => {
+    try {
+      const data = JSON.parse(event.nativeEvent.data);
+
+      if (data.type === 'pickup') {
+        setPickupCoords(data.coords);
+        setValue('pickup_address', data.coords);
+      } else if (data.type === 'delivery') {
+        setDeliveryCoords(data.coords);
+        setValue('delivery_address', data.coords);
+      }
+    } catch (error) {
+      console.log('Error parsing message:', error);
+    }
+  };
+
+  const handleModePress = (mode: 'pickup' | 'delivery') => {
+    setSelectedMode(selectedMode === mode ? null : mode);
+    if (webViewRef.current) {
+      webViewRef.current.injectJavaScript(`window.setMode('${mode}');`);
+    }
+  };
+
   const handleContinue = (data: ErrandLocationFormData) => {
-    if (!data.pickup_address || !data.delivery_address) {
-      Alert.alert('Campos incompletos', 'Completa ambas direcciones');
+    if (!pickupCoords || !deliveryCoords) {
+      Alert.alert('Ubicaciones incompletas', 'Selecciona ambas ubicaciones en el mapa');
       return;
     }
 
-    const km = estimateDistancePlaceholder(data.pickup_address, data.delivery_address);
+    const km = estimateDistancePlaceholder(pickupCoords, deliveryCoords);
     updateDraft({
-      pickupAddress: data.pickup_address,
+      pickupAddress: pickupCoords,
       pickupReference: data.pickup_reference ?? '',
-      deliveryAddress: data.delivery_address,
+      deliveryAddress: deliveryCoords,
       deliveryReference: data.delivery_reference ?? '',
       estimatedKm: km,
     });
@@ -45,44 +75,108 @@ export default function MandaderoLocationsScreen() {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{ flex: 1, backgroundColor: colors.surface }}
-    >
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
-        contentContainerStyle={{ flexGrow: 1 }}
-      >
-        <View style={{ paddingHorizontal: 20, paddingTop: 56, paddingBottom: 32, flex: 1 }}>
-          {/* Header */}
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 32 }}>
-            <TouchableOpacity onPress={() => router.back()} style={{ marginRight: 14 }}>
-              <Ionicons name="arrow-back" size={26} color={colors.textOnSurface} />
-            </TouchableOpacity>
-            <Text style={{ fontSize: 28, fontWeight: '900', color: colors.textOnSurface, letterSpacing: -0.5 }}>
-              Ubicaciones
-            </Text>
-          </View>
+    <View style={{ flex: 1, backgroundColor: colors.surface }}>
+      {/* Header */}
+      <View style={{ paddingHorizontal: 20, paddingTop: 56, paddingBottom: 12, backgroundColor: colors.surface, zIndex: 10 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
+          <TouchableOpacity onPress={() => router.back()} style={{ marginRight: 14 }}>
+            <Ionicons name="arrow-back" size={26} color={colors.textOnSurface} />
+          </TouchableOpacity>
+          <Text style={{ fontSize: 28, fontWeight: '900', color: colors.textOnSurface, letterSpacing: -0.5 }}>
+            Ubicaciones
+          </Text>
+        </View>
 
+        {/* Modo selector */}
+        <View style={{ flexDirection: 'row', gap: 10 }}>
+          <TouchableOpacity
+            onPress={() => handleModePress('pickup')}
+            style={{
+              flex: 1,
+              paddingVertical: 12,
+              paddingHorizontal: 12,
+              borderRadius: 12,
+              backgroundColor: selectedMode === 'pickup' ? '#FF5A5A' : colors.surfaceVariant,
+              alignItems: 'center',
+              flexDirection: 'row',
+              justifyContent: 'center',
+            }}
+          >
+            <Ionicons name="location" size={16} color={selectedMode === 'pickup' ? '#FFFFFF' : colors.textMuted} />
+            <Text
+              style={{
+                marginLeft: 6,
+                fontSize: 13,
+                fontWeight: '700',
+                color: selectedMode === 'pickup' ? '#FFFFFF' : colors.textMuted,
+              }}
+            >
+              Recogida
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => handleModePress('delivery')}
+            style={{
+              flex: 1,
+              paddingVertical: 12,
+              paddingHorizontal: 12,
+              borderRadius: 12,
+              backgroundColor: selectedMode === 'delivery' ? '#C8FF00' : colors.surfaceVariant,
+              alignItems: 'center',
+              flexDirection: 'row',
+              justifyContent: 'center',
+            }}
+          >
+            <Ionicons
+              name="location"
+              size={16}
+              color={selectedMode === 'delivery' ? '#000000' : colors.textMuted}
+            />
+            <Text
+              style={{
+                marginLeft: 6,
+                fontSize: 13,
+                fontWeight: '700',
+                color: selectedMode === 'delivery' ? '#000000' : colors.textMuted,
+              }}
+            >
+              Entrega
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/* Mapa */}
+      <WebView
+        ref={webViewRef}
+        source={require('../../assets/map.html')}
+        style={{ flex: 0.55, backgroundColor: colors.surfaceVariant }}
+        onMessage={handleWebViewMessage}
+        javaScriptEnabled={true}
+        domStorageEnabled={true}
+      />
+
+      {/* Información de ubicaciones */}
+      <ScrollView style={{ flex: 0.45, backgroundColor: colors.surface }} showsVerticalScrollIndicator={false}>
+        <View style={{ paddingHorizontal: 20, paddingTop: 16, paddingBottom: 24 }}>
           {/* Recogida */}
-          <View style={{ marginBottom: 28 }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
-              <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: '#FF5A5A', marginRight: 10 }} />
-              <Text style={{ fontSize: 16, fontWeight: '800', color: colors.textOnSurface }}>Punto de Recogida</Text>
+          <View style={{ marginBottom: 20 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
+              <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: '#FF5A5A', marginRight: 8 }} />
+              <Text style={{ fontSize: 15, fontWeight: '800', color: colors.textOnSurface }}>Recogida</Text>
             </View>
 
             <Controller
               control={control}
               name="pickup_address"
-              render={({ field: { onChange, onBlur, value } }) => (
+              render={({ field: { value } }) => (
                 <Input
-                  placeholder="Dirección de recogida (ej: Carrera 7 #45-89)"
+                  placeholder="Presiona en el mapa"
                   value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
+                  editable={false}
                   placeholderTextColor={colors.textMuted}
-                  style={{ marginBottom: 12 }}
+                  style={{ marginBottom: 10 }}
                 />
               )}
             />
@@ -103,23 +197,22 @@ export default function MandaderoLocationsScreen() {
           </View>
 
           {/* Entrega */}
-          <View style={{ marginBottom: 32 }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
-              <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: colors.primary, marginRight: 10 }} />
-              <Text style={{ fontSize: 16, fontWeight: '800', color: colors.textOnSurface }}>Punto de Entrega</Text>
+          <View style={{ marginBottom: 20 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
+              <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: '#C8FF00', marginRight: 8 }} />
+              <Text style={{ fontSize: 15, fontWeight: '800', color: colors.textOnSurface }}>Entrega</Text>
             </View>
 
             <Controller
               control={control}
               name="delivery_address"
-              render={({ field: { onChange, onBlur, value } }) => (
+              render={({ field: { value } }) => (
                 <Input
-                  placeholder="Dirección de entrega (ej: Calle 12 #34-56)"
+                  placeholder="Presiona en el mapa"
                   value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
+                  editable={false}
                   placeholderTextColor={colors.textMuted}
-                  style={{ marginBottom: 12 }}
+                  style={{ marginBottom: 10 }}
                 />
               )}
             />
@@ -139,24 +232,22 @@ export default function MandaderoLocationsScreen() {
             />
           </View>
 
-          {/* Spacer */}
-          <View style={{ flex: 1 }} />
-
           {/* Botón continuar */}
           <TouchableOpacity
             onPress={handleSubmit(handleContinue)}
+            disabled={!pickupCoords || !deliveryCoords}
             style={{
-              paddingVertical: 18,
-              borderRadius: 16,
+              paddingVertical: 16,
+              borderRadius: 14,
               alignItems: 'center',
-              backgroundColor: colors.primary,
+              backgroundColor: pickupCoords && deliveryCoords ? '#C8FF00' : `${colors.primary}30`,
             }}
           >
             <Text
               style={{
-                fontSize: 17,
+                fontSize: 16,
                 fontWeight: '800',
-                color: colors.textOnPrimary,
+                color: pickupCoords && deliveryCoords ? '#000000' : colors.textMuted,
               }}
             >
               Continuar
@@ -164,6 +255,6 @@ export default function MandaderoLocationsScreen() {
           </TouchableOpacity>
         </View>
       </ScrollView>
-    </KeyboardAvoidingView>
+    </View>
   );
 }
