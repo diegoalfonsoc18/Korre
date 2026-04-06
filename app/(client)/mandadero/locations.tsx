@@ -1,10 +1,11 @@
-import { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, Alert } from 'react-native';
+import { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, Alert, ActivityIndicator } from 'react-native';
 import { router } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Ionicons } from '@expo/vector-icons';
 import MapView, { Marker } from 'react-native-maps';
+import * as Location from 'expo-location';
 import { Input } from '@/components/ui/Input';
 import { useErrandStore } from '@/stores/errandStore';
 import { useTheme } from '@/context/ThemeContext';
@@ -24,6 +25,29 @@ export default function MandaderoLocationsScreen() {
   const [selectedMode, setSelectedMode] = useState<'pickup' | 'delivery' | null>(null);
   const [pickupCoords, setPickupCoords] = useState<{ latitude: number; longitude: number } | null>(null);
   const [deliveryCoords, setDeliveryCoords] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number; latitudeDelta: number; longitudeDelta: number } | null>(null);
+  const [locationLoading, setLocationLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permiso denegado', 'Se necesita acceso a la ubicación');
+        setUserLocation(BOGOTA_COORDS);
+        setLocationLoading(false);
+        return;
+      }
+
+      const location = await Location.getCurrentPositionAsync({});
+      setUserLocation({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.05,
+        longitudeDelta: 0.05,
+      });
+      setLocationLoading(false);
+    })();
+  }, []);
 
   const {
     control,
@@ -100,14 +124,28 @@ export default function MandaderoLocationsScreen() {
         </View>
 
         {/* Mapa */}
-        <MapView
-          style={{ flex: 0.5, backgroundColor: colors.surfaceVariant }}
-          initialRegion={BOGOTA_COORDS}
-          onPress={handleMapPress}
-        >
-          {pickupCoords && <Marker coordinate={pickupCoords} title="Recogida" pinColor="#FF5A5A" />}
-          {deliveryCoords && <Marker coordinate={deliveryCoords} title="Entrega" pinColor={colors.primary} />}
-        </MapView>
+        {locationLoading ? (
+          <View style={{ flex: 0.5, backgroundColor: colors.surfaceVariant, alignItems: 'center', justifyContent: 'center' }}>
+            <ActivityIndicator size="large" color={colors.primary} />
+            <Text style={{ color: colors.textMuted, marginTop: 10 }}>Obteniendo ubicación...</Text>
+          </View>
+        ) : (
+          <MapView
+            style={{ flex: 0.5, backgroundColor: colors.surfaceVariant }}
+            initialRegion={userLocation || BOGOTA_COORDS}
+            onPress={handleMapPress}
+          >
+            {userLocation && (
+              <Marker
+                coordinate={{ latitude: userLocation.latitude, longitude: userLocation.longitude }}
+                title="Tu ubicación"
+                pinColor={colors.primary}
+              />
+            )}
+            {pickupCoords && <Marker coordinate={pickupCoords} title="Recogida" pinColor="#FF5A5A" />}
+            {deliveryCoords && <Marker coordinate={deliveryCoords} title="Entrega" pinColor={colors.primary} />}
+          </MapView>
+        )}
 
         {/* Controles de modo */}
         <View style={{ paddingHorizontal: 20, paddingVertical: 14, backgroundColor: colors.surface, flexDirection: 'row', gap: 10 }}>
