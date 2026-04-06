@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '@/stores/authStore';
 import { useErrandStore } from '@/stores/errandStore';
+import { useTheme } from '@/context/ThemeContext';
 import { errandService } from '@/services/errandService';
 import {
   calculateErrandPrice,
@@ -12,18 +13,10 @@ import {
   ERRAND_CATEGORY_ICONS,
 } from '@/lib/pricing';
 
-const COLORS = {
-  primary: '#C8FF00',
-  surface: '#1A1A2E',
-  surfaceVariant: '#2D2D3A',
-  textOnSurface: '#FFFFFF',
-  textOnPrimary: '#1A1A2E',
-  textMuted: '#9E9EB0',
-};
-
 export default function MandaderoSummaryScreen() {
   const { profile } = useAuthStore();
   const { draft, updateDraft, setActiveErrand, resetDraft } = useErrandStore();
+  const { colors } = useTheme();
   const [isCreating, setIsCreating] = useState(false);
 
   const km = draft.estimatedKm ?? 5;
@@ -70,14 +63,14 @@ export default function MandaderoSummaryScreen() {
   };
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: COLORS.surface }} showsVerticalScrollIndicator={false}>
+    <ScrollView style={{ flex: 1, backgroundColor: colors.surface }} showsVerticalScrollIndicator={false}>
       <View style={{ paddingHorizontal: 20, paddingTop: 56, paddingBottom: 32 }}>
         {/* Header */}
         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 24 }}>
           <TouchableOpacity onPress={() => router.back()} style={{ marginRight: 12 }}>
-            <Ionicons name="arrow-back" size={24} color={COLORS.textOnSurface} />
+            <Ionicons name="arrow-back" size={24} color={colors.textOnSurface} />
           </TouchableOpacity>
-          <Text style={{ fontSize: 20, fontWeight: '700', color: COLORS.textOnSurface }}>
+          <Text style={{ fontSize: 20, fontWeight: '700', color: colors.textOnSurface }}>
             Resumen del Mandado
           </Text>
         </View>
@@ -88,7 +81,7 @@ export default function MandaderoSummaryScreen() {
             borderRadius: 16,
             padding: 16,
             marginBottom: 16,
-            backgroundColor: COLORS.surfaceVariant,
+            backgroundColor: colors.surfaceVariant,
           }}
         >
           <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
@@ -97,19 +90,19 @@ export default function MandaderoSummaryScreen() {
                 width: 36,
                 height: 36,
                 borderRadius: 12,
-                backgroundColor: COLORS.primary,
+                backgroundColor: colors.primary,
                 alignItems: 'center',
                 justifyContent: 'center',
                 marginRight: 10,
               }}
             >
-              <Ionicons name={categoryIcon} size={18} color={COLORS.textOnPrimary} />
+              <Ionicons name={categoryIcon} size={18} color={colors.textOnPrimary} />
             </View>
-            <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.textOnSurface }}>
+            <Text style={{ fontSize: 16, fontWeight: '700', color: colors.textOnSurface }}>
               {ERRAND_CATEGORY_LABELS[draft.category ?? 'otro']}
             </Text>
           </View>
-          <Text style={{ fontSize: 14, color: COLORS.textMuted, lineHeight: 20 }}>
+          <Text style={{ fontSize: 14, color: colors.textMuted, lineHeight: 20 }}>
             {draft.description}
           </Text>
         </View>
@@ -120,7 +113,7 @@ export default function MandaderoSummaryScreen() {
             borderRadius: 16,
             padding: 16,
             marginBottom: 16,
-            backgroundColor: COLORS.surfaceVariant,
+            backgroundColor: colors.surfaceVariant,
           }}
         >
           <View style={{ flexDirection: 'row', alignItems: 'flex-start', marginBottom: 12 }}>
@@ -129,20 +122,20 @@ export default function MandaderoSummaryScreen() {
                 width: 8,
                 height: 8,
                 borderRadius: 4,
-                backgroundColor: COLORS.primary,
+                backgroundColor: colors.primary,
                 marginRight: 10,
                 marginTop: 5,
               }}
             />
             <View style={{ flex: 1 }}>
-              <Text style={{ fontSize: 12, color: COLORS.textMuted, marginBottom: 2 }}>Recogida</Text>
-              <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.textOnSurface }}>
+              <Text style={{ fontSize: 12, color: colors.textMuted, marginBottom: 2 }}>Recogida</Text>
+              <Text style={{ fontSize: 14, fontWeight: '600', color: colors.textOnSurface }}>
                 {draft.pickupAddress}
               </Text>
             </View>
           </View>
           <View style={{ marginLeft: 4, marginBottom: 12 }}>
-            <View style={{ width: 1, height: 16, backgroundColor: 'rgba(200,255,0,0.15)' }} />
+            <View style={{ width: 1, height: 16, backgroundColor: colors.primary + '26' }} />
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'flex-start', marginBottom: 12 }}>
             <View
@@ -150,16 +143,16 @@ export default function MandaderoSummaryScreen() {
                 width: 8,
                 height: 8,
                 borderRadius: 4,
-                backgroundColor: COLORS.surfaceVariant,
+                backgroundColor: colors.surfaceVariant,
                 marginRight: 10,
                 marginTop: 5,
                 borderWidth: 2,
-                borderColor: COLORS.primary,
+                borderColor: colors.primary,
               }}
             />
             <View style={{ flex: 1 }}>
-              <Text style={{ fontSize: 12, color: COLORS.textMuted, marginBottom: 2 }}>Entrega</Text>
-              <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.textOnSurface }}>
+              <Text style={{ fontSize: 12, color: colors.textMuted, marginBottom: 2 }}>Entrega</Text>
+              <Text style={{ fontSize: 14, fontWeight: '600', color: colors.textOnSurface }}>
                 {draft.deliveryAddress}
               </Text>
             </View>
@@ -172,11 +165,11 @@ export default function MandaderoSummaryScreen() {
               marginTop: 12,
               paddingTop: 12,
               borderTopWidth: 1,
-              borderTopColor: 'rgba(200,255,0,0.15)',
+              borderTopColor: colors.primary + '26',
             }}
           >
-            <Ionicons name="navigate-outline" size={14} color={COLORS.textMuted} />
-            <Text style={{ fontSize: 13, marginLeft: 6, color: COLORS.textMuted }}>
+            <Ionicons name="navigate-outline" size={14} color={colors.textMuted} />
+            <Text style={{ fontSize: 13, marginLeft: 6, color: colors.textMuted }}>
               {km.toFixed(1)} km
             </Text>
           </View>
@@ -188,33 +181,33 @@ export default function MandaderoSummaryScreen() {
             borderRadius: 16,
             padding: 16,
             marginBottom: 16,
-            backgroundColor: COLORS.surfaceVariant,
+            backgroundColor: colors.surfaceVariant,
           }}
         >
-          <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.textOnSurface, marginBottom: 14 }}>
+          <Text style={{ fontSize: 16, fontWeight: '700', color: colors.textOnSurface, marginBottom: 14 }}>
             Precio estimado
           </Text>
 
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 }}>
-            <Text style={{ fontSize: 13, color: COLORS.textMuted }}>Tarifa base</Text>
-            <Text style={{ fontSize: 13, fontWeight: '600', color: COLORS.textOnSurface }}>
+            <Text style={{ fontSize: 13, color: colors.textMuted }}>Tarifa base</Text>
+            <Text style={{ fontSize: 13, fontWeight: '600', color: colors.textOnSurface }}>
               {formatCOP(pricing.basePrice)}
             </Text>
           </View>
 
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 }}>
-            <Text style={{ fontSize: 13, color: COLORS.textMuted }}>
+            <Text style={{ fontSize: 13, color: colors.textMuted }}>
               Distancia ({km.toFixed(1)} km)
             </Text>
-            <Text style={{ fontSize: 13, fontWeight: '600', color: COLORS.textOnSurface }}>
+            <Text style={{ fontSize: 13, fontWeight: '600', color: colors.textOnSurface }}>
               {formatCOP(pricing.distancePrice)}
             </Text>
           </View>
 
           {draft.estimatedItemValue ? (
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 }}>
-              <Text style={{ fontSize: 13, color: COLORS.textMuted }}>Valor articulos</Text>
-              <Text style={{ fontSize: 13, fontWeight: '600', color: COLORS.textOnSurface }}>
+              <Text style={{ fontSize: 13, color: colors.textMuted }}>Valor articulos</Text>
+              <Text style={{ fontSize: 13, fontWeight: '600', color: colors.textOnSurface }}>
                 ~{formatCOP(draft.estimatedItemValue)}
               </Text>
             </View>
@@ -225,21 +218,21 @@ export default function MandaderoSummaryScreen() {
               marginTop: 10,
               paddingTop: 12,
               borderTopWidth: 1,
-              borderTopColor: 'rgba(200,255,0,0.15)',
+              borderTopColor: colors.primary + '26',
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'center',
             }}
           >
-            <Text style={{ fontSize: 15, fontWeight: '700', color: COLORS.textOnSurface }}>
+            <Text style={{ fontSize: 15, fontWeight: '700', color: colors.textOnSurface }}>
               Total estimado
             </Text>
-            <Text style={{ fontSize: 18, fontWeight: '800', color: COLORS.primary }}>
+            <Text style={{ fontSize: 18, fontWeight: '800', color: colors.primary }}>
               {formatCOP(pricing.totalPrice)}
             </Text>
           </View>
 
-          <Text style={{ fontSize: 12, color: COLORS.textMuted, marginTop: 8 }}>
+          <Text style={{ fontSize: 12, color: colors.textMuted, marginTop: 8 }}>
             El valor final puede variar segun los articulos comprados
           </Text>
         </View>
@@ -250,7 +243,7 @@ export default function MandaderoSummaryScreen() {
             borderRadius: 16,
             padding: 16,
             marginBottom: 24,
-            backgroundColor: COLORS.surfaceVariant,
+            backgroundColor: colors.surfaceVariant,
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
@@ -264,19 +257,19 @@ export default function MandaderoSummaryScreen() {
                 borderRadius: 12,
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: COLORS.surface,
+                backgroundColor: colors.surface,
                 marginRight: 10,
               }}
             >
-              <Ionicons name="wallet-outline" size={18} color={COLORS.primary} />
+              <Ionicons name="wallet-outline" size={18} color={colors.primary} />
             </View>
             <View>
-              <Text style={{ fontSize: 14, fontWeight: '600', color: COLORS.textOnSurface }}>Efectivo</Text>
-              <Text style={{ fontSize: 12, color: COLORS.textMuted, marginTop: 2 }}>Pago al mandadero</Text>
+              <Text style={{ fontSize: 14, fontWeight: '600', color: colors.textOnSurface }}>Efectivo</Text>
+              <Text style={{ fontSize: 12, color: colors.textMuted, marginTop: 2 }}>Pago al mandadero</Text>
             </View>
           </View>
           <TouchableOpacity>
-            <Text style={{ fontSize: 13, fontWeight: '600', color: COLORS.primary }}>Cambiar</Text>
+            <Text style={{ fontSize: 13, fontWeight: '600', color: colors.primary }}>Cambiar</Text>
           </TouchableOpacity>
         </View>
 
@@ -288,10 +281,10 @@ export default function MandaderoSummaryScreen() {
             paddingVertical: 16,
             borderRadius: 14,
             alignItems: 'center',
-            backgroundColor: isCreating ? 'rgba(200,255,0,0.2)' : COLORS.primary,
+            backgroundColor: isCreating ? colors.primary + '33' : colors.primary,
           }}
         >
-          <Text style={{ fontSize: 16, fontWeight: '700', color: isCreating ? COLORS.textMuted : COLORS.textOnPrimary }}>
+          <Text style={{ fontSize: 16, fontWeight: '700', color: isCreating ? colors.textMuted : colors.textOnPrimary }}>
             {isCreating ? 'Creando mandado...' : `Confirmar Mandado - ${formatCOP(pricing.totalPrice)}`}
           </Text>
         </TouchableOpacity>

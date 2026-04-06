@@ -6,29 +6,20 @@ import { useOrderStore } from '@/stores/orderStore';
 import { orderService } from '@/services/orderService';
 import { formatCOP, VEHICLE_LABELS } from '@/lib/pricing';
 import { Order } from '@/types/database.types';
-
-const COLORS = {
-  primary: '#C8FF00',
-  surface: '#1A1A2E',
-  surfaceVariant: '#2D2D3A',
-  textOnSurface: '#FFFFFF',
-  textMuted: '#9E9EB0',
-  success: '#4ADE80',
-  danger: '#FF5A5A',
-  warning: '#FFB800',
-};
+import { useTheme } from '@/context/ThemeContext';
 
 const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
-  pending: { label: 'Pendiente', color: COLORS.warning },
-  accepted: { label: 'Aceptado', color: COLORS.primary },
+  pending: { label: 'Pendiente', color: '#FFB800' },
+  accepted: { label: 'Aceptado', color: '#C8FF00' },
   in_transit: { label: 'En camino', color: '#60A5FA' },
-  delivered: { label: 'Entregado', color: COLORS.success },
-  cancelled: { label: 'Cancelado', color: COLORS.danger },
+  delivered: { label: 'Entregado', color: '#4ADE80' },
+  cancelled: { label: 'Cancelado', color: '#FF5A5A' },
 };
 
 export default function ClientOrdersScreen() {
   const { profile } = useAuthStore();
   const { orderHistory, setOrderHistory } = useOrderStore();
+  const { colors } = useTheme();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -50,19 +41,19 @@ export default function ClientOrdersScreen() {
   };
 
   const renderOrder = ({ item }: { item: Order }) => {
-    const status = STATUS_CONFIG[item.status] ?? { label: item.status, color: COLORS.textMuted };
+    const status = STATUS_CONFIG[item.status] ?? { label: item.status, color: colors.textMuted };
 
     return (
       <View
         style={{
-          backgroundColor: COLORS.surfaceVariant,
+          backgroundColor: colors.surfaceVariant,
           borderRadius: 16,
           padding: 16,
           marginBottom: 12,
         }}
       >
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-          <Text style={{ color: COLORS.textMuted, fontSize: 12 }}>
+          <Text style={{ color: colors.textMuted, fontSize: 12 }}>
             {formatDate(item.created_at)}
           </Text>
           <View
@@ -81,14 +72,14 @@ export default function ClientOrdersScreen() {
 
         <View style={{ gap: 8, marginBottom: 14 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-            <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: COLORS.success }} />
-            <Text style={{ color: COLORS.textOnSurface, fontSize: 14, flex: 1 }} numberOfLines={1}>
+            <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: colors.success }} />
+            <Text style={{ color: colors.textOnSurface, fontSize: 14, flex: 1 }} numberOfLines={1}>
               {item.origin_address}
             </Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-            <Ionicons name="location" size={10} color={COLORS.primary} />
-            <Text style={{ color: COLORS.textOnSurface, fontSize: 14, flex: 1 }} numberOfLines={1}>
+            <Ionicons name="location" size={10} color={colors.primary} />
+            <Text style={{ color: colors.textOnSurface, fontSize: 14, flex: 1 }} numberOfLines={1}>
               {item.destination_address}
             </Text>
           </View>
@@ -100,14 +91,14 @@ export default function ClientOrdersScreen() {
             alignItems: 'center',
             justifyContent: 'space-between',
             borderTopWidth: 1,
-            borderTopColor: 'rgba(255,255,255,0.06)',
+            borderTopColor: colors.primary + '20',
             paddingTop: 12,
           }}
         >
-          <Text style={{ color: COLORS.textMuted, fontSize: 13 }}>
+          <Text style={{ color: colors.textMuted, fontSize: 13 }}>
             {VEHICLE_LABELS[item.vehicle_type]}
           </Text>
-          <Text style={{ color: COLORS.primary, fontSize: 15, fontWeight: '700' }}>
+          <Text style={{ color: colors.primary, fontSize: 15, fontWeight: '700' }}>
             {formatCOP(item.total_price)}
           </Text>
         </View>
@@ -117,19 +108,19 @@ export default function ClientOrdersScreen() {
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: COLORS.surface }}>
-        <ActivityIndicator size="large" color={COLORS.primary} />
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.surface }}>
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: COLORS.surface }}>
+    <View style={{ flex: 1, backgroundColor: colors.surface }}>
       <View style={{ paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16 }}>
-        <Text style={{ color: COLORS.textOnSurface, fontSize: 24, fontWeight: '800' }}>
+        <Text style={{ color: colors.textOnSurface, fontSize: 24, fontWeight: '800' }}>
           Mis pedidos
         </Text>
-        <Text style={{ color: COLORS.textMuted, fontSize: 14, marginTop: 4 }}>
+        <Text style={{ color: colors.textMuted, fontSize: 14, marginTop: 4 }}>
           {orderHistory.length} pedido{orderHistory.length !== 1 ? 's' : ''}
         </Text>
       </View>
@@ -141,18 +132,18 @@ export default function ClientOrdersScreen() {
               width: 80,
               height: 80,
               borderRadius: 24,
-              backgroundColor: COLORS.surfaceVariant,
+              backgroundColor: colors.surfaceVariant,
               alignItems: 'center',
               justifyContent: 'center',
               marginBottom: 16,
             }}
           >
-            <Ionicons name="receipt-outline" size={36} color={COLORS.textMuted} />
+            <Ionicons name="receipt-outline" size={36} color={colors.textMuted} />
           </View>
-          <Text style={{ color: COLORS.textOnSurface, fontSize: 18, fontWeight: '700', marginBottom: 8 }}>
+          <Text style={{ color: colors.textOnSurface, fontSize: 18, fontWeight: '700', marginBottom: 8 }}>
             Sin pedidos aun
           </Text>
-          <Text style={{ color: COLORS.textMuted, fontSize: 14, textAlign: 'center' }}>
+          <Text style={{ color: colors.textMuted, fontSize: 14, textAlign: 'center' }}>
             Tus pedidos apareceran aqui una vez que hagas el primero.
           </Text>
         </View>

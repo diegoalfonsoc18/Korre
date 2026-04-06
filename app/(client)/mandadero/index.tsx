@@ -11,16 +11,8 @@ import {
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useErrandStore } from '@/stores/errandStore';
+import { useTheme } from '@/context/ThemeContext';
 import { ErrandCategory } from '@/types/database.types';
-
-const COLORS = {
-  primary: '#C8FF00',
-  surface: '#1A1A2E',
-  surfaceVariant: '#2D2D3A',
-  textOnSurface: '#FFFFFF',
-  textOnPrimary: '#1A1A2E',
-  textMuted: '#9E9EB0',
-};
 
 const CATEGORIES: { key: ErrandCategory; label: string; icon: keyof typeof Ionicons.glyphMap }[] = [
   { key: 'compras', label: 'Compras', icon: 'cart-outline' },
@@ -31,6 +23,7 @@ const CATEGORIES: { key: ErrandCategory; label: string; icon: keyof typeof Ionic
 
 export default function MandaderoRequestScreen() {
   const { draft, updateDraft } = useErrandStore();
+  const { colors } = useTheme();
   const [itemValueText, setItemValueText] = useState('');
 
   const canContinue = draft.category && draft.description.length >= 10;
@@ -47,7 +40,7 @@ export default function MandaderoRequestScreen() {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{ flex: 1, backgroundColor: COLORS.surface }}
+      style={{ flex: 1, backgroundColor: colors.surface }}
     >
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -58,13 +51,13 @@ export default function MandaderoRequestScreen() {
           {/* Header */}
           <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 24 }}>
             <TouchableOpacity onPress={() => router.back()} style={{ marginRight: 12 }}>
-              <Ionicons name="arrow-back" size={24} color={COLORS.textOnSurface} />
+              <Ionicons name="arrow-back" size={24} color={colors.textOnSurface} />
             </TouchableOpacity>
             <View style={{ flex: 1 }}>
-              <Text style={{ fontSize: 24, fontWeight: '800', color: COLORS.textOnSurface }}>
+              <Text style={{ fontSize: 24, fontWeight: '800', color: colors.textOnSurface }}>
                 Mandadero Digital
               </Text>
-              <Text style={{ fontSize: 13, color: COLORS.textMuted, marginTop: 2 }}>
+              <Text style={{ fontSize: 13, color: colors.textMuted, marginTop: 2 }}>
                 ¿Que necesitas que hagamos por ti?
               </Text>
             </View>
@@ -73,17 +66,17 @@ export default function MandaderoRequestScreen() {
                 width: 40,
                 height: 40,
                 borderRadius: 14,
-                backgroundColor: COLORS.primary,
+                backgroundColor: colors.primary,
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
             >
-              <Ionicons name="walk-outline" size={20} color={COLORS.textOnPrimary} />
+              <Ionicons name="walk-outline" size={20} color={colors.textOnPrimary} />
             </View>
           </View>
 
           {/* Categorías */}
-          <Text style={{ fontSize: 15, fontWeight: '700', color: COLORS.textOnSurface, marginBottom: 12 }}>
+          <Text style={{ fontSize: 15, fontWeight: '700', color: colors.textOnSurface, marginBottom: 12 }}>
             Tipo de mandado
           </Text>
           <View style={{ flexDirection: 'row', gap: 10, marginBottom: 24 }}>
@@ -98,22 +91,22 @@ export default function MandaderoRequestScreen() {
                     alignItems: 'center',
                     paddingVertical: 16,
                     borderRadius: 16,
-                    backgroundColor: isSelected ? COLORS.primary : COLORS.surfaceVariant,
+                    backgroundColor: isSelected ? colors.primary : colors.surfaceVariant,
                     borderWidth: isSelected ? 2 : 0,
-                    borderColor: COLORS.primary,
+                    borderColor: colors.primary,
                   }}
                 >
                   <Ionicons
                     name={cat.icon}
                     size={24}
-                    color={isSelected ? COLORS.textOnPrimary : COLORS.primary}
+                    color={isSelected ? colors.textOnPrimary : colors.primary}
                   />
                   <Text
                     style={{
                       fontSize: 12,
                       fontWeight: '600',
                       marginTop: 6,
-                      color: isSelected ? COLORS.textOnPrimary : COLORS.textOnSurface,
+                      color: isSelected ? colors.textOnPrimary : colors.textOnSurface,
                     }}
                   >
                     {cat.label}
@@ -124,7 +117,7 @@ export default function MandaderoRequestScreen() {
           </View>
 
           {/* Descripción */}
-          <Text style={{ fontSize: 15, fontWeight: '700', color: COLORS.textOnSurface, marginBottom: 10 }}>
+          <Text style={{ fontSize: 15, fontWeight: '700', color: colors.textOnSurface, marginBottom: 10 }}>
             ¿Que necesitas?
           </Text>
           <View
@@ -132,25 +125,25 @@ export default function MandaderoRequestScreen() {
               borderRadius: 16,
               padding: 14,
               marginBottom: 6,
-              backgroundColor: COLORS.surfaceVariant,
+              backgroundColor: colors.surfaceVariant,
               minHeight: 120,
             }}
           >
             <TextInput
               placeholder="Describe tu mandado... Ej: Comprar 2 kilos de arroz en el D1 de la Calle 80"
-              placeholderTextColor={COLORS.textMuted}
+              placeholderTextColor={colors.textMuted}
               multiline
               numberOfLines={4}
               value={draft.description}
               onChangeText={(text) => updateDraft({ description: text })}
               style={{
-                color: COLORS.textOnSurface,
+                color: colors.textOnSurface,
                 fontSize: 15,
                 lineHeight: 22,
               }}
             />
           </View>
-          <Text style={{ fontSize: 12, color: COLORS.textMuted, marginBottom: 20 }}>
+          <Text style={{ fontSize: 12, color: colors.textMuted, marginBottom: 20 }}>
             {draft.description.length}/200 caracteres
           </Text>
 
@@ -163,13 +156,13 @@ export default function MandaderoRequestScreen() {
               paddingVertical: 16,
               borderRadius: 16,
               borderWidth: 1.5,
-              borderColor: 'rgba(200,255,0,0.15)',
+              borderColor: colors.primary + '26',
               borderStyle: 'dashed',
               marginBottom: 24,
             }}
           >
-            <Ionicons name="camera-outline" size={22} color={COLORS.textMuted} />
-            <Text style={{ marginLeft: 8, fontSize: 14, color: COLORS.textMuted }}>
+            <Ionicons name="camera-outline" size={22} color={colors.textMuted} />
+            <Text style={{ marginLeft: 8, fontSize: 14, color: colors.textMuted }}>
               Agregar foto (opcional)
             </Text>
           </TouchableOpacity>
@@ -177,7 +170,7 @@ export default function MandaderoRequestScreen() {
           {/* Valor artículos */}
           {draft.category === 'compras' && (
             <View style={{ marginBottom: 24 }}>
-              <Text style={{ fontSize: 15, fontWeight: '700', color: COLORS.textOnSurface, marginBottom: 10 }}>
+              <Text style={{ fontSize: 15, fontWeight: '700', color: colors.textOnSurface, marginBottom: 10 }}>
                 Valor aproximado de los artículos
               </Text>
               <View
@@ -187,25 +180,25 @@ export default function MandaderoRequestScreen() {
                   borderRadius: 16,
                   paddingHorizontal: 14,
                   paddingVertical: 12,
-                  backgroundColor: COLORS.surfaceVariant,
+                  backgroundColor: colors.surfaceVariant,
                 }}
               >
-                <Text style={{ fontSize: 16, fontWeight: '700', marginRight: 8, color: COLORS.textOnSurface }}>
+                <Text style={{ fontSize: 16, fontWeight: '700', marginRight: 8, color: colors.textOnSurface }}>
                   $
                 </Text>
                 <TextInput
                   placeholder="0"
-                  placeholderTextColor={COLORS.textMuted}
+                  placeholderTextColor={colors.textMuted}
                   keyboardType="numeric"
                   value={itemValueText}
                   onChangeText={setItemValueText}
                   style={{
                     flex: 1,
-                    color: COLORS.textOnSurface,
+                    color: colors.textOnSurface,
                     fontSize: 16,
                   }}
                 />
-                <Text style={{ fontSize: 13, color: COLORS.textMuted }}>COP</Text>
+                <Text style={{ fontSize: 13, color: colors.textMuted }}>COP</Text>
               </View>
             </View>
           )}
@@ -221,14 +214,14 @@ export default function MandaderoRequestScreen() {
               paddingVertical: 16,
               borderRadius: 14,
               alignItems: 'center',
-              backgroundColor: canContinue ? COLORS.primary : 'rgba(200,255,0,0.2)',
+              backgroundColor: canContinue ? colors.primary : colors.primary + '33',
             }}
           >
             <Text
               style={{
                 fontSize: 16,
                 fontWeight: '700',
-                color: canContinue ? COLORS.textOnPrimary : COLORS.textMuted,
+                color: canContinue ? colors.textOnPrimary : colors.textMuted,
               }}
             >
               Continuar

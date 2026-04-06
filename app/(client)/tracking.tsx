@@ -5,29 +5,19 @@ import { useOrderStore } from '@/stores/orderStore';
 import { useRealtimeOrder } from '@/hooks/useRealtimeOrder';
 import { orderService } from '@/services/orderService';
 import { formatCOP, VEHICLE_LABELS } from '@/lib/pricing';
-
-const COLORS = {
-  primary: '#C8FF00',
-  surface: '#1A1A2E',
-  surfaceVariant: '#2D2D3A',
-  textOnSurface: '#FFFFFF',
-  textOnPrimary: '#1A1A2E',
-  textMuted: '#9E9EB0',
-  success: '#4ADE80',
-  danger: '#FF5A5A',
-  warning: '#FFB800',
-};
+import { useTheme } from '@/context/ThemeContext';
 
 const STATUS_CONFIG: Record<string, { label: string; desc: string; color: string; icon: string }> = {
-  pending: { label: 'Buscando conductor', desc: 'Estamos buscando un mensajero disponible...', color: COLORS.warning, icon: 'search' },
-  accepted: { label: 'Conductor asignado', desc: 'Tu conductor va en camino a recoger el paquete', color: COLORS.primary, icon: 'checkmark-circle' },
+  pending: { label: 'Buscando conductor', desc: 'Estamos buscando un mensajero disponible...', color: '#FFB800', icon: 'search' },
+  accepted: { label: 'Conductor asignado', desc: 'Tu conductor va en camino a recoger el paquete', color: '#C8FF00', icon: 'checkmark-circle' },
   in_transit: { label: 'En camino', desc: 'Tu paquete esta en camino al destino', color: '#60A5FA', icon: 'bicycle' },
-  delivered: { label: 'Entregado', desc: 'Tu pedido fue entregado exitosamente', color: COLORS.success, icon: 'checkmark-done-circle' },
-  cancelled: { label: 'Cancelado', desc: 'Este pedido fue cancelado', color: COLORS.danger, icon: 'close-circle' },
+  delivered: { label: 'Entregado', desc: 'Tu pedido fue entregado exitosamente', color: '#4ADE80', icon: 'checkmark-done-circle' },
+  cancelled: { label: 'Cancelado', desc: 'Este pedido fue cancelado', color: '#FF5A5A', icon: 'close-circle' },
 };
 
 export default function TrackingScreen() {
   const { activeOrder, setActiveOrder } = useOrderStore();
+  const { colors } = useTheme();
 
   useRealtimeOrder(activeOrder?.id ?? null);
 
@@ -66,37 +56,37 @@ export default function TrackingScreen() {
 
   if (!activeOrder) {
     return (
-      <View style={{ flex: 1, backgroundColor: COLORS.surface, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24 }}>
+      <View style={{ flex: 1, backgroundColor: colors.surface, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24 }}>
         <View
           style={{
             width: 80,
             height: 80,
             borderRadius: 24,
-            backgroundColor: COLORS.surfaceVariant,
+            backgroundColor: colors.surfaceVariant,
             alignItems: 'center',
             justifyContent: 'center',
             marginBottom: 16,
           }}
         >
-          <Ionicons name="location-outline" size={36} color={COLORS.textMuted} />
+          <Ionicons name="location-outline" size={36} color={colors.textMuted} />
         </View>
-        <Text style={{ color: COLORS.textOnSurface, fontSize: 18, fontWeight: '700', marginBottom: 8 }}>
+        <Text style={{ color: colors.textOnSurface, fontSize: 18, fontWeight: '700', marginBottom: 8 }}>
           Sin pedido activo
         </Text>
-        <Text style={{ color: COLORS.textMuted, fontSize: 14, textAlign: 'center', marginBottom: 24 }}>
+        <Text style={{ color: colors.textMuted, fontSize: 14, textAlign: 'center', marginBottom: 24 }}>
           Cuando realices un pedido podras ver su estado aqui en tiempo real.
         </Text>
         <TouchableOpacity
           activeOpacity={0.85}
           onPress={() => router.push('/(client)/home')}
           style={{
-            backgroundColor: COLORS.primary,
+            backgroundColor: colors.primary,
             borderRadius: 14,
             paddingVertical: 14,
             paddingHorizontal: 32,
           }}
         >
-          <Text style={{ color: COLORS.textOnPrimary, fontSize: 15, fontWeight: '700' }}>
+          <Text style={{ color: colors.textOnPrimary, fontSize: 15, fontWeight: '700' }}>
             Hacer un pedido
           </Text>
         </TouchableOpacity>
@@ -104,24 +94,24 @@ export default function TrackingScreen() {
     );
   }
 
-  const status = STATUS_CONFIG[activeOrder.status] ?? { label: activeOrder.status, desc: '', color: COLORS.textMuted, icon: 'help-circle' };
+  const status = STATUS_CONFIG[activeOrder.status] ?? { label: activeOrder.status, desc: '', color: colors.textMuted, icon: 'help-circle' };
   const isCompleted = activeOrder.status === 'delivered' || activeOrder.status === 'cancelled';
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: COLORS.surface }} showsVerticalScrollIndicator={false}>
+    <ScrollView style={{ flex: 1, backgroundColor: colors.surface }} showsVerticalScrollIndicator={false}>
       <View style={{ paddingHorizontal: 20, paddingTop: 56, paddingBottom: 32 }}>
         {/* Header */}
-        <Text style={{ color: COLORS.textOnSurface, fontSize: 24, fontWeight: '800', marginBottom: 4 }}>
+        <Text style={{ color: colors.textOnSurface, fontSize: 24, fontWeight: '800', marginBottom: 4 }}>
           Seguimiento
         </Text>
-        <Text style={{ color: COLORS.textMuted, fontSize: 13, marginBottom: 24 }}>
+        <Text style={{ color: colors.textMuted, fontSize: 13, marginBottom: 24 }}>
           Pedido #{activeOrder.id.slice(-8).toUpperCase()}
         </Text>
 
         {/* Status Card */}
         <View
           style={{
-            backgroundColor: COLORS.surfaceVariant,
+            backgroundColor: colors.surfaceVariant,
             borderRadius: 18,
             padding: 20,
             marginBottom: 16,
@@ -131,11 +121,11 @@ export default function TrackingScreen() {
         >
           <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
             <Ionicons name={status.icon as any} size={24} color={status.color} />
-            <Text style={{ color: COLORS.textOnSurface, fontSize: 17, fontWeight: '700', marginLeft: 10 }}>
+            <Text style={{ color: colors.textOnSurface, fontSize: 17, fontWeight: '700', marginLeft: 10 }}>
               {status.label}
             </Text>
           </View>
-          <Text style={{ color: COLORS.textMuted, fontSize: 14 }}>
+          <Text style={{ color: colors.textMuted, fontSize: 14 }}>
             {status.desc}
           </Text>
 
@@ -146,7 +136,7 @@ export default function TrackingScreen() {
                 marginTop: 16,
                 paddingTop: 14,
                 borderTopWidth: 1,
-                borderTopColor: 'rgba(255,255,255,0.06)',
+                borderTopColor: colors.primary + '20',
                 flexDirection: 'row',
                 alignItems: 'center',
               }}
@@ -156,19 +146,19 @@ export default function TrackingScreen() {
                   width: 42,
                   height: 42,
                   borderRadius: 14,
-                  backgroundColor: COLORS.surface,
+                  backgroundColor: colors.surface,
                   alignItems: 'center',
                   justifyContent: 'center',
                   marginRight: 12,
                 }}
               >
-                <Ionicons name="person" size={20} color={COLORS.primary} />
+                <Ionicons name="person" size={20} color={colors.primary} />
               </View>
               <View style={{ flex: 1 }}>
-                <Text style={{ color: COLORS.textOnSurface, fontSize: 15, fontWeight: '700' }}>
+                <Text style={{ color: colors.textOnSurface, fontSize: 15, fontWeight: '700' }}>
                   {activeOrder.driver.full_name}
                 </Text>
-                <Text style={{ color: COLORS.textMuted, fontSize: 13 }}>
+                <Text style={{ color: colors.textMuted, fontSize: 13 }}>
                   {VEHICLE_LABELS[activeOrder.vehicle_type]}
                 </Text>
               </View>
@@ -180,12 +170,12 @@ export default function TrackingScreen() {
                     width: 42,
                     height: 42,
                     borderRadius: 14,
-                    backgroundColor: 'rgba(200,255,0,0.12)',
+                    backgroundColor: colors.primary + '20',
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}
                 >
-                  <Ionicons name="call" size={20} color={COLORS.primary} />
+                  <Ionicons name="call" size={20} color={colors.primary} />
                 </TouchableOpacity>
               )}
             </View>
@@ -195,39 +185,39 @@ export default function TrackingScreen() {
         {/* Route Card */}
         <View
           style={{
-            backgroundColor: COLORS.surfaceVariant,
+            backgroundColor: colors.surfaceVariant,
             borderRadius: 18,
             padding: 20,
             marginBottom: 16,
           }}
         >
-          <Text style={{ color: COLORS.textOnSurface, fontSize: 16, fontWeight: '700', marginBottom: 16 }}>
+          <Text style={{ color: colors.textOnSurface, fontSize: 16, fontWeight: '700', marginBottom: 16 }}>
             Ruta
           </Text>
           <View style={{ gap: 16 }}>
             <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 12 }}>
-              <View style={{ marginTop: 4, width: 12, height: 12, borderRadius: 6, backgroundColor: COLORS.success }} />
+              <View style={{ marginTop: 4, width: 12, height: 12, borderRadius: 6, backgroundColor: colors.success }} />
               <View style={{ flex: 1 }}>
-                <Text style={{ color: COLORS.textMuted, fontSize: 12, marginBottom: 2 }}>Recogida</Text>
-                <Text style={{ color: COLORS.textOnSurface, fontSize: 14, fontWeight: '600' }}>
+                <Text style={{ color: colors.textMuted, fontSize: 12, marginBottom: 2 }}>Recogida</Text>
+                <Text style={{ color: colors.textOnSurface, fontSize: 14, fontWeight: '600' }}>
                   {activeOrder.origin_address}
                 </Text>
                 {activeOrder.origin_reference ? (
-                  <Text style={{ color: COLORS.textMuted, fontSize: 12, marginTop: 2 }}>
+                  <Text style={{ color: colors.textMuted, fontSize: 12, marginTop: 2 }}>
                     {activeOrder.origin_reference}
                   </Text>
                 ) : null}
               </View>
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 12 }}>
-              <Ionicons name="location" size={14} color={COLORS.primary} style={{ marginTop: 2 }} />
+              <Ionicons name="location" size={14} color={colors.primary} style={{ marginTop: 2 }} />
               <View style={{ flex: 1 }}>
-                <Text style={{ color: COLORS.textMuted, fontSize: 12, marginBottom: 2 }}>Entrega</Text>
-                <Text style={{ color: COLORS.textOnSurface, fontSize: 14, fontWeight: '600' }}>
+                <Text style={{ color: colors.textMuted, fontSize: 12, marginBottom: 2 }}>Entrega</Text>
+                <Text style={{ color: colors.textOnSurface, fontSize: 14, fontWeight: '600' }}>
                   {activeOrder.destination_address}
                 </Text>
                 {activeOrder.destination_reference ? (
-                  <Text style={{ color: COLORS.textMuted, fontSize: 12, marginTop: 2 }}>
+                  <Text style={{ color: colors.textMuted, fontSize: 12, marginTop: 2 }}>
                     {activeOrder.destination_reference}
                   </Text>
                 ) : null}
@@ -239,7 +229,7 @@ export default function TrackingScreen() {
         {/* Price Card */}
         <View
           style={{
-            backgroundColor: COLORS.surfaceVariant,
+            backgroundColor: colors.surfaceVariant,
             borderRadius: 18,
             padding: 20,
             marginBottom: 24,
@@ -248,10 +238,10 @@ export default function TrackingScreen() {
             alignItems: 'center',
           }}
         >
-          <Text style={{ color: COLORS.textOnSurface, fontSize: 15, fontWeight: '600' }}>
+          <Text style={{ color: colors.textOnSurface, fontSize: 15, fontWeight: '600' }}>
             Total a pagar
           </Text>
-          <Text style={{ color: COLORS.primary, fontSize: 22, fontWeight: '800' }}>
+          <Text style={{ color: colors.primary, fontSize: 22, fontWeight: '800' }}>
             {formatCOP(activeOrder.total_price)}
           </Text>
         </View>
@@ -265,13 +255,13 @@ export default function TrackingScreen() {
               router.replace('/(client)/home');
             }}
             style={{
-              backgroundColor: COLORS.primary,
+              backgroundColor: colors.primary,
               borderRadius: 14,
               paddingVertical: 16,
               alignItems: 'center',
             }}
           >
-            <Text style={{ color: COLORS.textOnPrimary, fontSize: 16, fontWeight: '700' }}>
+            <Text style={{ color: colors.textOnPrimary, fontSize: 16, fontWeight: '700' }}>
               Hacer otro pedido
             </Text>
           </TouchableOpacity>
@@ -281,15 +271,15 @@ export default function TrackingScreen() {
               activeOpacity={0.85}
               onPress={handleCancel}
               style={{
-                backgroundColor: 'rgba(255,90,90,0.12)',
+                backgroundColor: colors.danger + '20',
                 borderRadius: 14,
                 paddingVertical: 16,
                 alignItems: 'center',
                 borderWidth: 1,
-                borderColor: 'rgba(255,90,90,0.3)',
+                borderColor: colors.danger + '30',
               }}
             >
-              <Text style={{ color: COLORS.danger, fontSize: 16, fontWeight: '700' }}>
+              <Text style={{ color: colors.danger, fontSize: 16, fontWeight: '700' }}>
                 Cancelar pedido
               </Text>
             </TouchableOpacity>

@@ -5,20 +5,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Ionicons } from '@expo/vector-icons';
 import { Input } from '@/components/ui/Input';
 import { useErrandStore } from '@/stores/errandStore';
+import { useTheme } from '@/context/ThemeContext';
 import { errandLocationSchema, ErrandLocationFormData } from '@/lib/validators';
 import { estimateDistancePlaceholder } from '@/lib/pricing';
 
-const COLORS = {
-  primary: '#C8FF00',
-  surface: '#1A1A2E',
-  surfaceVariant: '#2D2D3A',
-  textOnSurface: '#FFFFFF',
-  textOnPrimary: '#1A1A2E',
-  textMuted: '#9E9EB0',
-};
-
 export default function MandaderoLocationsScreen() {
   const { draft, updateDraft } = useErrandStore();
+  const { colors } = useTheme();
 
   const {
     control,
@@ -49,7 +42,7 @@ export default function MandaderoLocationsScreen() {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{ flex: 1, backgroundColor: COLORS.surface }}
+      style={{ flex: 1, backgroundColor: colors.surface }}
     >
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -60,9 +53,9 @@ export default function MandaderoLocationsScreen() {
           {/* Header */}
           <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 24 }}>
             <TouchableOpacity onPress={() => router.back()} style={{ marginRight: 12 }}>
-              <Ionicons name="arrow-back" size={24} color={COLORS.textOnSurface} />
+              <Ionicons name="arrow-back" size={24} color={colors.textOnSurface} />
             </TouchableOpacity>
-            <Text style={{ fontSize: 20, fontWeight: '700', color: COLORS.textOnSurface }}>
+            <Text style={{ fontSize: 20, fontWeight: '700', color: colors.textOnSurface }}>
               Ubicaciones
             </Text>
           </View>
@@ -75,11 +68,11 @@ export default function MandaderoLocationsScreen() {
               marginBottom: 24,
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: COLORS.surfaceVariant,
+              backgroundColor: colors.surfaceVariant,
             }}
           >
-            <Ionicons name="map-outline" size={48} color={COLORS.textMuted} />
-            <Text style={{ fontSize: 13, color: COLORS.textMuted, marginTop: 8 }}>
+            <Ionicons name="map-outline" size={48} color={colors.textMuted} />
+            <Text style={{ fontSize: 13, color: colors.textMuted, marginTop: 8 }}>
               Mapa proximamente
             </Text>
           </View>
@@ -91,11 +84,11 @@ export default function MandaderoLocationsScreen() {
                 width: 8,
                 height: 8,
                 borderRadius: 4,
-                backgroundColor: COLORS.primary,
+                backgroundColor: colors.primary,
                 marginRight: 10,
               }}
             />
-            <Text style={{ fontSize: 15, fontWeight: '700', color: COLORS.textOnSurface }}>
+            <Text style={{ fontSize: 15, fontWeight: '700', color: colors.textOnSurface }}>
               Punto de Recogida
             </Text>
           </View>
@@ -130,7 +123,7 @@ export default function MandaderoLocationsScreen() {
 
           {/* Línea conectora */}
           <View style={{ marginLeft: 4, marginVertical: 8 }}>
-            <View style={{ width: 1, height: 20, backgroundColor: 'rgba(200,255,0,0.15)' }} />
+            <View style={{ width: 1, height: 20, backgroundColor: colors.primary + '26' }} />
           </View>
 
           {/* Punto de entrega */}
@@ -140,11 +133,11 @@ export default function MandaderoLocationsScreen() {
                 width: 8,
                 height: 8,
                 borderRadius: 4,
-                backgroundColor: COLORS.surfaceVariant,
+                backgroundColor: colors.surfaceVariant,
                 marginRight: 10,
               }}
             />
-            <Text style={{ fontSize: 15, fontWeight: '700', color: COLORS.textOnSurface }}>
+            <Text style={{ fontSize: 15, fontWeight: '700', color: colors.textOnSurface }}>
               Punto de Entrega
             </Text>
           </View>
@@ -189,10 +182,10 @@ export default function MandaderoLocationsScreen() {
                 paddingVertical: 16,
                 borderRadius: 14,
                 alignItems: 'center',
-                backgroundColor: COLORS.surfaceVariant,
+                backgroundColor: colors.surfaceVariant,
               }}
             >
-              <Text style={{ fontSize: 15, fontWeight: '700', color: COLORS.textOnSurface }}>
+              <Text style={{ fontSize: 15, fontWeight: '700', color: colors.textOnSurface }}>
                 Atras
               </Text>
             </TouchableOpacity>
@@ -203,10 +196,10 @@ export default function MandaderoLocationsScreen() {
                 paddingVertical: 16,
                 borderRadius: 14,
                 alignItems: 'center',
-                backgroundColor: COLORS.primary,
+                backgroundColor: colors.primary,
               }}
             >
-              <Text style={{ fontSize: 15, fontWeight: '700', color: COLORS.textOnPrimary }}>
+              <Text style={{ fontSize: 15, fontWeight: '700', color: colors.textOnPrimary }}>
                 Continuar
               </Text>
             </TouchableOpacity>
